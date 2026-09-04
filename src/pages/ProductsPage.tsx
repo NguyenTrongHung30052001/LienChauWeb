@@ -32,14 +32,16 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
     { id: 'fw25', label: t.products.tabFW25 }
   ];
 
-  // Merge custom categories that might have been added in Admin
+  // Merge custom categories that might have been added in Admin (and not hidden)
   const additionalCategories = (customCategories || [])
-    .filter(c => !defaultCategoryTabs.some(d => d.id === c.id))
+    .filter(c => c.status !== 'hidden' && !defaultCategoryTabs.some(d => d.id === c.id))
     .map(c => ({ id: c.id, label: c.name }));
 
   const categories = [...defaultCategoryTabs, ...additionalCategories];
 
-  const filteredProducts = (products || []).filter((product) => {
+  const visibleProducts = (products || []).filter((p) => p.status !== 'hidden');
+
+  const filteredProducts = visibleProducts.filter((product) => {
     const matchesCategory = activeCategory === 'all' || product.category === activeCategory;
     const matchesSearch =
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||

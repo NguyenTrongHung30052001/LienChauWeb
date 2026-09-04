@@ -16,7 +16,7 @@ interface CareersPageProps {
 export const CareersPage: React.FC<CareersPageProps> = () => {
   const { t, language } = useLanguage();
   const { jobs = [], jobOpenings = [], addApplication } = useData();
-  const currentJobs = jobs || jobOpenings || [];
+  const currentJobs = (jobs || jobOpenings || []).filter((j) => j.status !== 'hidden');
   const [selectedDepartment, setSelectedDepartment] = useState<string>('all');
   const [viewingJob, setViewingJob] = useState<JobOpening | null>(null);
   const [applyingJob, setApplyingJob] = useState<JobOpening | null>(null);

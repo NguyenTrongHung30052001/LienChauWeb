@@ -15,6 +15,7 @@ import {
   Check,
   X,
   Eye,
+  EyeOff,
   Download,
   Upload,
   RefreshCw,
@@ -60,16 +61,20 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
     addProduct,
     updateProduct,
     deleteProduct,
+    toggleProductStatus,
     addCategory,
     updateCategory,
     deleteCategory,
+    toggleCategoryStatus,
     addArticle,
     updateArticle,
     deleteArticle,
+    toggleArticleStatus,
     addJob,
     updateJob,
     deleteJob,
     toggleJobUrgent,
+    toggleJobStatus,
     updateQuoteStatus,
     deleteQuote,
     updateApplicationStatus,
@@ -86,6 +91,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
   // Search queries per tab
   const [productSearch, setProductSearch] = useState('');
   const [productCategoryFilter, setProductCategoryFilter] = useState('all');
+  const [productStatusFilter, setProductStatusFilter] = useState<'all' | 'active' | 'hidden'>('all');
   const [newsSearch, setNewsSearch] = useState('');
   const [careersSearch, setCareersSearch] = useState('');
   const [quotesFilter, setQuotesFilter] = useState<'all' | 'new' | 'contacted' | 'quoted' | 'closed'>('all');
@@ -150,13 +156,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
   const filteredProducts = useMemo(() => {
     return (products || []).filter((p) => {
       const matchCat = productCategoryFilter === 'all' || p.category === productCategoryFilter;
+      const matchStatus = productStatusFilter === 'all' || (p.status || 'active') === productStatusFilter;
       const matchSearch =
         p.name.toLowerCase().includes(productSearch.toLowerCase()) ||
         p.subtitle.toLowerCase().includes(productSearch.toLowerCase()) ||
         p.material.toLowerCase().includes(productSearch.toLowerCase());
-      return matchCat && matchSearch;
+      return matchCat && matchStatus && matchSearch;
     });
-  }, [products, productCategoryFilter, productSearch]);
+  }, [products, productCategoryFilter, productStatusFilter, productSearch]);
 
   const filteredNews = useMemo(() => {
     return (newsArticles || []).filter((a) => {
@@ -707,6 +714,16 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
                       </option>
                     ))}
                   </select>
+
+                  <select
+                    value={productStatusFilter}
+                    onChange={(e) => setProductStatusFilter(e.target.value as any)}
+                    className="py-2 px-3 border border-zinc-300 rounded-sm text-xs bg-white text-zinc-700 focus:outline-emerald-600 cursor-pointer font-medium"
+                  >
+                    <option value="all">Tất cả trạng thái ({(products || []).length})</option>
+                    <option value="active">Chỉ hiển thị ({(products || []).filter(p => p.status !== 'hidden').length})</option>
+                    <option value="hidden">Chỉ đang ẩn ({(products || []).filter(p => p.status === 'hidden').length})</option>
+                  </select>
                 </div>
 
                 <button
@@ -729,6 +746,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
                       <th className="p-3">Khổ Bản</th>
                       <th className="p-3">Lực Kéo</th>
                       <th className="p-3">MOQ</th>
+                      <th className="p-3">Trạng Thái</th>
                       <th className="p-3">Huy Hiệu</th>
                       <th className="p-3 text-right">Thao Tác</th>
                     </tr>
@@ -757,6 +775,19 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
                         <td className="p-3 font-mono text-emerald-700 font-bold whitespace-nowrap">{prod.tensileStrength}</td>
                         <td className="p-3 font-mono text-zinc-600 whitespace-nowrap">{prod.moq}</td>
                         <td className="p-3 whitespace-nowrap">
+                          {prod.status === 'hidden' ? (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-zinc-200 text-zinc-700 rounded-xs text-[10px] font-mono font-bold uppercase border border-zinc-300">
+                              <EyeOff className="w-3 h-3 text-zinc-500" />
+                              Ẩn
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-xs text-[10px] font-mono font-bold uppercase border border-emerald-200">
+                              <Eye className="w-3 h-3 text-emerald-600" />
+                              Hiển Thị
+                            </span>
+                          )}
+                        </td>
+                        <td className="p-3 whitespace-nowrap">
                           {prod.isNew && (
                             <span className="px-1.5 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold uppercase rounded-xs">
                               Mới 2026
@@ -775,6 +806,21 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
                         </td>
                         <td className="p-3 text-right whitespace-nowrap">
                           <div className="flex items-center justify-end gap-1.5">
+                            <button
+                              onClick={() => {
+                                toggleProductStatus(prod.id);
+                                showToast(prod.status === 'hidden' ? `Đã hiển thị sản phẩm "${prod.name}"` : `Đã ẩn sản phẩm "${prod.name}"`, 'info');
+                              }}
+                              className={`px-2 py-1 text-xs rounded-sm border font-medium flex items-center gap-1 transition-colors cursor-pointer ${
+                                prod.status === 'hidden'
+                                  ? 'bg-zinc-100 text-zinc-700 border-zinc-300 hover:bg-zinc-200'
+                                  : 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100'
+                              }`}
+                              title={prod.status === 'hidden' ? 'Bấm để Hiện sản phẩm trên website' : 'Bấm để Ẩn sản phẩm khỏi website'}
+                            >
+                              {prod.status === 'hidden' ? <EyeOff className="w-3.5 h-3.5 text-zinc-500" /> : <Eye className="w-3.5 h-3.5 text-emerald-600" />}
+                              <span>{prod.status === 'hidden' ? 'Hiện' : 'Ẩn'}</span>
+                            </button>
                             <button
                               onClick={() => setEditingProduct(prod)}
                               className="p-1.5 text-zinc-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-sm transition-colors cursor-pointer"
@@ -800,7 +846,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
                     ))}
                     {filteredProducts.length === 0 && (
                       <tr>
-                        <td colSpan={8} className="p-8 text-center text-zinc-500">
+                        <td colSpan={9} className="p-8 text-center text-zinc-500">
                           Không tìm thấy sản phẩm nào phù hợp với bộ lọc tìm kiếm.
                         </td>
                       </tr>
@@ -847,9 +893,22 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
                           <span className="px-2 py-0.5 bg-white border border-zinc-200 text-zinc-600 font-mono text-[10px] uppercase font-bold rounded-xs">
                             SLUG: {cat.id}
                           </span>
-                          <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold font-mono rounded-full">
-                            {productCount} sản phẩm
-                          </span>
+                          <div className="flex items-center gap-1.5">
+                            {cat.status === 'hidden' ? (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-zinc-200 text-zinc-700 text-[10px] font-bold font-mono uppercase rounded-xs border border-zinc-300">
+                                <EyeOff className="w-3 h-3 text-zinc-500" />
+                                Ẩn
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold font-mono uppercase rounded-xs border border-emerald-200">
+                                <Eye className="w-3 h-3 text-emerald-600" />
+                                Hiển Thị
+                              </span>
+                            )}
+                            <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold font-mono rounded-full">
+                              {productCount} sp
+                            </span>
+                          </div>
                         </div>
                         <h4 className="font-bold text-sm text-zinc-900">{cat.name}</h4>
                         {cat.nameEn && (
@@ -871,7 +930,22 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
                           <span>Xem sản phẩm</span>
                           <ChevronRight className="w-3 h-3" />
                         </button>
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            onClick={() => {
+                              toggleCategoryStatus(cat.id);
+                              showToast(cat.status === 'hidden' ? `Đã hiển thị danh mục "${cat.name}"` : `Đã ẩn danh mục "${cat.name}"`, 'info');
+                            }}
+                            className={`px-2 py-1 text-xs rounded-sm border font-medium flex items-center gap-1 transition-colors cursor-pointer ${
+                              cat.status === 'hidden'
+                                ? 'bg-zinc-200 text-zinc-700 border-zinc-300 hover:bg-zinc-300'
+                                : 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100'
+                            }`}
+                            title={cat.status === 'hidden' ? 'Bấm để Hiện trên website' : 'Bấm để Ẩn khỏi website'}
+                          >
+                            {cat.status === 'hidden' ? <EyeOff className="w-3.5 h-3.5 text-zinc-500" /> : <Eye className="w-3.5 h-3.5 text-emerald-600" />}
+                            <span>{cat.status === 'hidden' ? 'Hiện' : 'Ẩn'}</span>
+                          </button>
                           <button
                             onClick={() => setEditingCategory(cat)}
                             className="p-1.5 text-zinc-600 hover:text-emerald-700 hover:bg-white rounded-sm transition-colors cursor-pointer"
@@ -940,6 +1014,17 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
                     />
                     <div className="flex-1 space-y-1.5">
                       <div className="flex flex-wrap items-center gap-2">
+                        {art.status === 'hidden' ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-zinc-200 text-zinc-700 text-[10px] font-bold font-mono uppercase rounded-xs border border-zinc-300">
+                            <EyeOff className="w-3 h-3 text-zinc-500" />
+                            Ẩn
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold font-mono uppercase rounded-xs border border-emerald-200">
+                            <Eye className="w-3 h-3 text-emerald-600" />
+                            Hiển Thị
+                          </span>
+                        )}
                         <span className="px-2 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xs text-[10px] font-mono font-bold uppercase">
                           {art.category}
                         </span>
@@ -969,6 +1054,21 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
                     </div>
 
                     <div className="flex md:flex-col items-center justify-end gap-2 shrink-0 self-end md:self-center">
+                      <button
+                        onClick={() => {
+                          toggleArticleStatus(art.id);
+                          showToast(art.status === 'hidden' ? `Đã hiển thị bài viết "${art.title}"` : `Đã ẩn bài viết "${art.title}"`, 'info');
+                        }}
+                        className={`px-3 py-1.5 text-xs font-medium rounded-sm flex items-center gap-1 transition-colors cursor-pointer border ${
+                          art.status === 'hidden'
+                            ? 'bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border-zinc-300'
+                            : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-200'
+                        }`}
+                        title={art.status === 'hidden' ? 'Bấm để Hiện trên website' : 'Bấm để Ẩn khỏi website'}
+                      >
+                        {art.status === 'hidden' ? <EyeOff className="w-3.5 h-3.5 text-zinc-500" /> : <Eye className="w-3.5 h-3.5 text-emerald-600" />}
+                        <span>{art.status === 'hidden' ? 'Hiện' : 'Ẩn'}</span>
+                      </button>
                       <button
                         onClick={() => setEditingArticle(art)}
                         className="px-3 py-1.5 bg-zinc-100 hover:bg-emerald-50 text-zinc-700 hover:text-emerald-700 text-xs font-medium rounded-sm flex items-center gap-1 transition-colors cursor-pointer"
@@ -1051,6 +1151,17 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
                         <div className="space-y-1">
                           <div className="flex items-center gap-2">
                             <h4 className="font-bold text-base text-zinc-900">{job.title}</h4>
+                            {job.status === 'hidden' ? (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-zinc-200 text-zinc-700 text-[10px] font-bold font-mono uppercase rounded-xs border border-zinc-300">
+                                <EyeOff className="w-3 h-3 text-zinc-500" />
+                                Ẩn
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold font-mono uppercase rounded-xs border border-emerald-200">
+                                <Eye className="w-3 h-3 text-emerald-600" />
+                                Hiển Thị
+                              </span>
+                            )}
                             {job.urgent && (
                               <span className="px-2 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold font-mono uppercase rounded-xs border border-red-200">
                                 Tuyển gấp
@@ -1069,6 +1180,21 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
                         </div>
 
                         <div className="flex items-center gap-2 self-end sm:self-center">
+                          <button
+                            onClick={() => {
+                              toggleJobStatus(job.id);
+                              showToast(job.status === 'hidden' ? `Đã hiển thị vị trí "${job.title}"` : `Đã ẩn vị trí "${job.title}"`, 'info');
+                            }}
+                            className={`px-2.5 py-1 text-xs rounded-sm border font-medium cursor-pointer transition-colors flex items-center gap-1 ${
+                              job.status === 'hidden'
+                                ? 'bg-zinc-100 text-zinc-700 border-zinc-300 hover:bg-zinc-200'
+                                : 'bg-emerald-50 text-emerald-800 border-emerald-200 hover:bg-emerald-100'
+                            }`}
+                            title={job.status === 'hidden' ? 'Bấm để Hiện tin tuyển dụng trên website' : 'Bấm để Ẩn tin tuyển dụng khỏi website'}
+                          >
+                            {job.status === 'hidden' ? <EyeOff className="w-3.5 h-3.5 text-zinc-500" /> : <Eye className="w-3.5 h-3.5 text-emerald-600" />}
+                            <span>{job.status === 'hidden' ? 'Hiện' : 'Ẩn'}</span>
+                          </button>
                           <button
                             onClick={() => toggleJobUrgent(job.id)}
                             className={`px-2.5 py-1 text-xs rounded-sm border font-medium cursor-pointer transition-colors ${
@@ -1470,6 +1596,7 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
     modelColor: initialData?.modelColor || '#059669',
     modelTexture: initialData?.modelTexture || 'woven',
     image: initialData?.image || 'https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=800&q=80',
+    status: initialData?.status || 'active',
     isNew: initialData?.isNew || false,
     isFW25: initialData?.isFW25 || false
   });
@@ -1671,6 +1798,42 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
             />
           </div>
 
+          <div className="p-3 bg-zinc-50 border border-zinc-200 rounded-sm">
+            <label className="block font-bold text-zinc-700 mb-1.5 uppercase tracking-wider text-[11px]">
+              Trạng Thái Hiển Thị Sản Phẩm
+            </label>
+            <div className="flex flex-wrap items-center gap-6">
+              <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-zinc-800">
+                <input
+                  type="radio"
+                  name="productStatus"
+                  value="active"
+                  checked={(formData.status || 'active') === 'active'}
+                  onChange={() => setFormData({ ...formData, status: 'active' })}
+                  className="w-4 h-4 text-emerald-600 cursor-pointer"
+                />
+                <span className="flex items-center gap-1">
+                  <Eye className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Hiển thị trên website (Khách hàng xem được)</span>
+                </span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-zinc-800">
+                <input
+                  type="radio"
+                  name="productStatus"
+                  value="hidden"
+                  checked={formData.status === 'hidden'}
+                  onChange={() => setFormData({ ...formData, status: 'hidden' })}
+                  className="w-4 h-4 text-zinc-600 cursor-pointer"
+                />
+                <span className="flex items-center gap-1">
+                  <EyeOff className="w-3.5 h-3.5 text-zinc-500" />
+                  <span>Ẩn khỏi website (Tạm dừng hiển thị)</span>
+                </span>
+              </label>
+            </div>
+          </div>
+
           <div className="flex flex-wrap items-center gap-6 pt-2 border-t border-zinc-200">
             <label className="flex items-center gap-2 cursor-pointer">
               <input
@@ -1732,6 +1895,7 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
   const [name, setName] = useState(initialData?.name || '');
   const [nameEn, setNameEn] = useState(initialData?.nameEn || '');
   const [description, setDescription] = useState(initialData?.description || '');
+  const [status, setStatus] = useState<'active' | 'hidden'>(initialData?.status || 'active');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -1740,6 +1904,7 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
       name,
       nameEn,
       description,
+      status,
       isFeatured: true
     });
   };
@@ -1805,6 +1970,42 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
             />
           </div>
 
+          <div className="p-3 bg-zinc-50 border border-zinc-200 rounded-sm">
+            <label className="block font-bold text-zinc-700 mb-1.5 uppercase tracking-wider text-[11px]">
+              Trạng Thái Hiển Thị Danh Mục
+            </label>
+            <div className="flex flex-wrap items-center gap-6">
+              <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-zinc-800">
+                <input
+                  type="radio"
+                  name="catStatus"
+                  value="active"
+                  checked={status === 'active'}
+                  onChange={() => setStatus('active')}
+                  className="w-4 h-4 text-emerald-600 cursor-pointer"
+                />
+                <span className="flex items-center gap-1">
+                  <Eye className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Hiển thị trên website</span>
+                </span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-zinc-800">
+                <input
+                  type="radio"
+                  name="catStatus"
+                  value="hidden"
+                  checked={status === 'hidden'}
+                  onChange={() => setStatus('hidden')}
+                  className="w-4 h-4 text-zinc-600 cursor-pointer"
+                />
+                <span className="flex items-center gap-1">
+                  <EyeOff className="w-3.5 h-3.5 text-zinc-500" />
+                  <span>Ẩn khỏi website</span>
+                </span>
+              </label>
+            </div>
+          </div>
+
           <div className="pt-4 border-t border-zinc-200 flex items-center justify-end gap-3">
             <button
               type="button"
@@ -1850,6 +2051,7 @@ const ArticleFormModal: React.FC<ArticleFormModalProps> = ({
   const [paragraphs, setParagraphs] = useState((initialData?.content || ['']).join('\n\n'));
   const [image, setImage] = useState(initialData?.image || 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=80');
   const [tagsText, setTagsText] = useState((initialData?.tags || ['Dệt may', 'ISO 2062', 'Xu hướng 2026']).join(', '));
+  const [status, setStatus] = useState<'active' | 'hidden'>(initialData?.status || 'active');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -1866,7 +2068,8 @@ const ArticleFormModal: React.FC<ArticleFormModalProps> = ({
       summary,
       content: contentArr.length > 0 ? contentArr : [summary],
       image,
-      tags: tagsArr
+      tags: tagsArr,
+      status
     });
   };
 
@@ -1992,6 +2195,42 @@ const ArticleFormModal: React.FC<ArticleFormModalProps> = ({
             />
           </div>
 
+          <div className="p-3 bg-zinc-50 border border-zinc-200 rounded-sm">
+            <label className="block font-bold text-zinc-700 mb-1.5 uppercase tracking-wider text-[11px]">
+              Trạng Thái Hiển Thị Bài Viết
+            </label>
+            <div className="flex flex-wrap items-center gap-6">
+              <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-zinc-800">
+                <input
+                  type="radio"
+                  name="articleStatus"
+                  value="active"
+                  checked={status === 'active'}
+                  onChange={() => setStatus('active')}
+                  className="w-4 h-4 text-emerald-600 cursor-pointer"
+                />
+                <span className="flex items-center gap-1">
+                  <Eye className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Hiển thị trên website</span>
+                </span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-zinc-800">
+                <input
+                  type="radio"
+                  name="articleStatus"
+                  value="hidden"
+                  checked={status === 'hidden'}
+                  onChange={() => setStatus('hidden')}
+                  className="w-4 h-4 text-zinc-600 cursor-pointer"
+                />
+                <span className="flex items-center gap-1">
+                  <EyeOff className="w-3.5 h-3.5 text-zinc-500" />
+                  <span>Ẩn khỏi website</span>
+                </span>
+              </label>
+            </div>
+          </div>
+
           <div className="pt-4 border-t border-zinc-200 flex items-center justify-end gap-3">
             <button
               type="button"
@@ -2035,6 +2274,7 @@ const JobFormModal: React.FC<JobFormModalProps> = ({
   const [salary, setSalary] = useState(initialData?.salary || '10 - 15 Triệu + Thưởng');
   const [deadline, setDeadline] = useState(initialData?.deadline || '30/10/2026');
   const [urgent, setUrgent] = useState(initialData?.urgent || false);
+  const [status, setStatus] = useState<'active' | 'hidden'>(initialData?.status || 'active');
   const [description, setDescription] = useState(initialData?.description || '');
   const [respText, setRespText] = useState((initialData?.responsibilities || ['Vận hành máy dệt kim đan tròn 32 thoi', 'Giám sát chỉ số KCS']).join('\n'));
   const [reqText, setReqText] = useState((initialData?.requirements || ['Có chứng chỉ nghề dệt may', 'Chịu khó, cẩn thận']).join('\n'));
@@ -2051,6 +2291,7 @@ const JobFormModal: React.FC<JobFormModalProps> = ({
       salary,
       deadline,
       urgent,
+      status,
       description: description || 'Gia nhập đội ngũ sản xuất phụ liệu dệt may Liên Châu tại Bình Dương.',
       responsibilities: respText.split('\n').map((s) => s.trim()).filter(Boolean),
       requirements: reqText.split('\n').map((s) => s.trim()).filter(Boolean),
@@ -2191,6 +2432,42 @@ const JobFormModal: React.FC<JobFormModalProps> = ({
               onChange={(e) => setBenText(e.target.value)}
               className="w-full p-2.5 border border-zinc-300 rounded-sm focus:outline-emerald-600 leading-relaxed font-mono text-[11px]"
             />
+          </div>
+
+          <div className="p-3 bg-zinc-50 border border-zinc-200 rounded-sm">
+            <label className="block font-bold text-zinc-700 mb-1.5 uppercase tracking-wider text-[11px]">
+              Trạng Thái Hiển Thị Tin Tuyển Dụng
+            </label>
+            <div className="flex flex-wrap items-center gap-6">
+              <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-zinc-800">
+                <input
+                  type="radio"
+                  name="jobStatus"
+                  value="active"
+                  checked={status === 'active'}
+                  onChange={() => setStatus('active')}
+                  className="w-4 h-4 text-emerald-600 cursor-pointer"
+                />
+                <span className="flex items-center gap-1">
+                  <Eye className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Hiển thị trên website (Đang nhận hồ sơ)</span>
+                </span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-zinc-800">
+                <input
+                  type="radio"
+                  name="jobStatus"
+                  value="hidden"
+                  checked={status === 'hidden'}
+                  onChange={() => setStatus('hidden')}
+                  className="w-4 h-4 text-zinc-600 cursor-pointer"
+                />
+                <span className="flex items-center gap-1">
+                  <EyeOff className="w-3.5 h-3.5 text-zinc-500" />
+                  <span>Ẩn khỏi website (Tạm đóng tuyển dụng)</span>
+                </span>
+              </label>
+            </div>
           </div>
 
           <div className="pt-2 border-t border-zinc-200">

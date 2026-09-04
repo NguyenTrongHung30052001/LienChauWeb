@@ -20,19 +20,38 @@ function AppContent() {
   const [selectedProductForQuote, setSelectedProductForQuote] = useState<string>('');
   const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
 
-  // Parse initial page from hash if available
+  // Parse initial page from path or hash
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#/', '').replace('#', '');
-      const validPages: PageId[] = ['home', 'about', 'products', 'process', 'news', 'careers', 'contact', 'admin'];
-      if (validPages.includes(hash as PageId)) {
-        setCurrentPage(hash as PageId);
+    const handleRouteChange = () => {
+      const pathname = window.location.pathname.toLowerCase();
+      const rawHash = window.location.hash.replace('#/', '').replace('#', '').toLowerCase();
+
+      // Support direct path /adminsystem or hashes #/adminsystem or #/admin
+      if (
+        pathname === '/adminsystem' ||
+        pathname === '/adminsystem/' ||
+        rawHash === 'adminsystem' ||
+        rawHash === 'admin'
+      ) {
+        setCurrentPage('admin');
+        return;
+      }
+
+      const validPages: PageId[] = ['home', 'about', 'products', 'process', 'news', 'careers', 'contact'];
+      if (validPages.includes(rawHash as PageId)) {
+        setCurrentPage(rawHash as PageId);
+      } else if (!rawHash) {
+        setCurrentPage('home');
       }
     };
 
-    handleHashChange();
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    handleRouteChange();
+    window.addEventListener('hashchange', handleRouteChange);
+    window.addEventListener('popstate', handleRouteChange);
+    return () => {
+      window.removeEventListener('hashchange', handleRouteChange);
+      window.removeEventListener('popstate', handleRouteChange);
+    };
   }, []);
 
   // Monitor scroll for back-to-top button
@@ -46,7 +65,15 @@ function AppContent() {
 
   const navigateTo = (page: PageId) => {
     setCurrentPage(page);
-    window.location.hash = `#/${page}`;
+    if (page === 'admin') {
+      window.history.pushState(null, '', '/adminsystem');
+      window.location.hash = '#/adminsystem';
+    } else {
+      if (window.location.pathname.toLowerCase().includes('adminsystem')) {
+        window.history.pushState(null, '', `/#/${page}`);
+      }
+      window.location.hash = `#/${page}`;
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -60,12 +87,14 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900 flex flex-col font-sans selection:bg-emerald-600 selection:text-white">
-      {/* 1. Global Navigation Bar */}
-      <Navbar
-        currentPage={currentPage}
-        onNavigate={navigateTo}
-        onOpenQuote={() => navigateTo('contact')}
-      />
+      {/* 1. Global Navigation Bar (Hidden when in admin CMS workspace) */}
+      {currentPage !== 'admin' && (
+        <Navbar
+          currentPage={currentPage}
+          onNavigate={navigateTo}
+          onOpenQuote={() => navigateTo('contact')}
+        />
+      )}
 
       {/* 2. Main Page Render */}
       <main className="flex-1">
@@ -123,8 +152,8 @@ function AppContent() {
         )}
       </main>
 
-      {/* 3. Global Footer (Hide if inside admin or keep footer) */}
-      <Footer onNavigate={navigateTo} />
+      {/* 3. Global Footer (Hidden when in admin CMS workspace) */}
+      {currentPage !== 'admin' && <Footer onNavigate={navigateTo} />}
 
       {/* 4. Floating Action Controls */}
       <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3 pointer-events-none">

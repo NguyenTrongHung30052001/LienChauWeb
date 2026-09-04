@@ -11,7 +11,7 @@ interface NewsPageProps {
 export const NewsPage: React.FC<NewsPageProps> = ({ onNavigateToContact }) => {
   const { t, language } = useLanguage();
   const { articles = [], newsArticles = [] } = useData();
-  const currentArticles = articles || newsArticles || [];
+  const currentArticles = (articles || newsArticles || []).filter((a) => a.status !== 'hidden');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);

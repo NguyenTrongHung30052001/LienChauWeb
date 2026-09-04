@@ -20,22 +20,26 @@ interface DataContextType {
   addProduct: (product: Omit<Product, 'id'>) => Product;
   updateProduct: (id: string, updated: Partial<Product>) => void;
   deleteProduct: (id: string) => void;
+  toggleProductStatus: (id: string) => void;
 
   // Categories CRUD
   addCategory: (cat: CategoryItem) => void;
   updateCategory: (id: string, updated: Partial<CategoryItem>) => void;
   deleteCategory: (id: string) => void;
+  toggleCategoryStatus: (id: string) => void;
 
   // News CRUD
   addArticle: (article: Omit<NewsArticle, 'id'>) => NewsArticle;
   updateArticle: (id: string, updated: Partial<NewsArticle>) => void;
   deleteArticle: (id: string) => void;
+  toggleArticleStatus: (id: string) => void;
 
   // Careers CRUD
   addJob: (job: Omit<JobOpening, 'id'>) => JobOpening;
   updateJob: (id: string, updated: Partial<JobOpening>) => void;
   deleteJob: (id: string) => void;
   toggleJobUrgent: (id: string) => void;
+  toggleJobStatus: (id: string) => void;
 
   // Quotes
   addQuote: (quote: Omit<QuoteRequestItem, 'id' | 'createdAt' | 'status'>) => QuoteRequestItem;
@@ -85,7 +89,8 @@ const mapRowToProduct = (row: any): Product => ({
   modelTexture: row.model_texture || row.modelTexture || 'woven',
   image: row.image || '',
   isNew: row.is_new ?? row.isNew ?? false,
-  isFW25: row.is_fw25 ?? false
+  isFW25: row.is_fw25 ?? false,
+  status: (row.status === 'hidden' ? 'hidden' : 'active') as 'active' | 'hidden'
 });
 
 const mapProductToRow = (p: Product) => ({
@@ -107,6 +112,7 @@ const mapProductToRow = (p: Product) => ({
   model_texture: p.modelTexture || 'woven',
   image: p.image || '',
   is_new: p.isNew ?? false,
+  status: p.status || 'active',
   updated_at: new Date().toISOString()
 });
 
@@ -121,7 +127,8 @@ const mapRowToArticle = (row: any): NewsArticle => ({
   content: Array.isArray(row.content) ? row.content : [row.content || ''],
   image: row.image || '',
   tags: Array.isArray(row.tags) ? row.tags : [],
-  author: row.author || 'Ban Biên Tập Liên Châu'
+  author: row.author || 'Ban Biên Tập Liên Châu',
+  status: (row.status === 'hidden' ? 'hidden' : 'active') as 'active' | 'hidden'
 });
 
 const mapArticleToRow = (a: NewsArticle) => ({
@@ -136,6 +143,7 @@ const mapArticleToRow = (a: NewsArticle) => ({
   image: a.image,
   tags: a.tags,
   author: a.author,
+  status: a.status || 'active',
   updated_at: new Date().toISOString()
 });
 
@@ -152,7 +160,8 @@ const mapRowToJob = (row: any): JobOpening => ({
   description: row.overview || row.description || '',
   responsibilities: Array.isArray(row.responsibilities) ? row.responsibilities : [],
   requirements: Array.isArray(row.requirements) ? row.requirements : [],
-  benefits: Array.isArray(row.benefits) ? row.benefits : []
+  benefits: Array.isArray(row.benefits) ? row.benefits : [],
+  status: (row.status === 'hidden' ? 'hidden' : 'active') as 'active' | 'hidden'
 });
 
 const mapJobToRow = (j: JobOpening) => ({
@@ -169,6 +178,7 @@ const mapJobToRow = (j: JobOpening) => ({
   requirements: j.requirements,
   benefits: j.benefits,
   is_urgent: j.urgent ?? false,
+  status: j.status || 'active',
   updated_at: new Date().toISOString()
 });
 
@@ -241,7 +251,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
             nameEn: c.name,
             description: '',
             icon: 'Layers',
-            isFeatured: true
+            isFeatured: true,
+            status: (c.status === 'hidden' ? 'hidden' : 'active') as 'active' | 'hidden'
           }))
         );
       }
@@ -426,13 +437,32 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
+  const toggleProductStatus = (id: string) => {
+    setProducts(prev => {
+      const next = prev.map(p => {
+        if (p.id === id) {
+          const nextStatus = p.status === 'hidden' ? 'active' : 'hidden';
+          return { ...p, status: nextStatus as 'active' | 'hidden' };
+        }
+        return p;
+      });
+      const target = next.find(p => p.id === id);
+      if (target) {
+        supabase.from('products').update({ status: target.status, updated_at: new Date().toISOString() }).eq('id', id).then(({ error }) => {
+          if (error) console.error('Supabase toggle product status error:', error);
+        });
+      }
+      return next;
+    });
+  };
+
   // Categories Actions
   const addCategory = (cat: CategoryItem) => {
     setCategories(prev => {
       if (prev.some(c => c.id === cat.id)) return prev;
       return [...prev, cat];
     });
-    supabase.from('categories').insert([{ id: cat.id, name: cat.name, count: 0 }]).then(({ error }) => {
+    supabase.from('categories').insert([{ id: cat.id, name: cat.name, count: 0, status: cat.status || 'active' }]).then(({ error }) => {
       if (error) console.error('Supabase insert category error:', error);
     });
   };
@@ -442,7 +472,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const next = prev.map(c => (c.id === id ? { ...c, ...updated } : c));
       const target = next.find(c => c.id === id);
       if (target) {
-        supabase.from('categories').update({ name: target.name }).eq('id', id).then(({ error }) => {
+        supabase.from('categories').update({ name: target.name, status: target.status || 'active' }).eq('id', id).then(({ error }) => {
           if (error) console.error('Supabase update category error:', error);
         });
       }
@@ -454,6 +484,25 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCategories(prev => prev.filter(c => c.id !== id));
     supabase.from('categories').delete().eq('id', id).then(({ error }) => {
       if (error) console.error('Supabase delete category error:', error);
+    });
+  };
+
+  const toggleCategoryStatus = (id: string) => {
+    setCategories(prev => {
+      const next = prev.map(c => {
+        if (c.id === id) {
+          const nextStatus = c.status === 'hidden' ? 'active' : 'hidden';
+          return { ...c, status: nextStatus as 'active' | 'hidden' };
+        }
+        return c;
+      });
+      const target = next.find(c => c.id === id);
+      if (target) {
+        supabase.from('categories').update({ status: target.status }).eq('id', id).then(({ error }) => {
+          if (error) console.error('Supabase toggle category status error:', error);
+        });
+      }
+      return next;
     });
   };
 
@@ -488,6 +537,25 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setNewsArticles(prev => prev.filter(a => a.id !== id));
     supabase.from('news_articles').delete().eq('id', id).then(({ error }) => {
       if (error) console.error('Supabase delete article error:', error);
+    });
+  };
+
+  const toggleArticleStatus = (id: string) => {
+    setNewsArticles(prev => {
+      const next = prev.map(a => {
+        if (a.id === id) {
+          const nextStatus = a.status === 'hidden' ? 'active' : 'hidden';
+          return { ...a, status: nextStatus as 'active' | 'hidden' };
+        }
+        return a;
+      });
+      const target = next.find(a => a.id === id);
+      if (target) {
+        supabase.from('news_articles').update({ status: target.status, updated_at: new Date().toISOString() }).eq('id', id).then(({ error }) => {
+          if (error) console.error('Supabase toggle article status error:', error);
+        });
+      }
+      return next;
     });
   };
 
@@ -532,6 +600,25 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (target) {
         supabase.from('jobs').update({ is_urgent: target.urgent }).eq('id', id).then(({ error }) => {
           if (error) console.error('Supabase toggle urgent error:', error);
+        });
+      }
+      return next;
+    });
+  };
+
+  const toggleJobStatus = (id: string) => {
+    setJobOpenings(prev => {
+      const next = prev.map(j => {
+        if (j.id === id) {
+          const nextStatus = j.status === 'hidden' ? 'active' : 'hidden';
+          return { ...j, status: nextStatus as 'active' | 'hidden' };
+        }
+        return j;
+      });
+      const target = next.find(j => j.id === id);
+      if (target) {
+        supabase.from('jobs').update({ status: target.status, updated_at: new Date().toISOString() }).eq('id', id).then(({ error }) => {
+          if (error) console.error('Supabase toggle job status error:', error);
         });
       }
       return next;
@@ -702,16 +789,20 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         addProduct,
         updateProduct,
         deleteProduct,
+        toggleProductStatus,
         addCategory,
         updateCategory,
         deleteCategory,
+        toggleCategoryStatus,
         addArticle,
         updateArticle,
         deleteArticle,
+        toggleArticleStatus,
         addJob,
         updateJob,
         deleteJob,
         toggleJobUrgent,
+        toggleJobStatus,
         addQuote,
         updateQuoteStatus,
         deleteQuote,

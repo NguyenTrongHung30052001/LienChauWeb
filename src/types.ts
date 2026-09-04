@@ -27,6 +27,7 @@ export interface Product {
   image: string;
   isNew?: boolean;
   isFW25?: boolean;
+  status?: 'active' | 'hidden';
 }
 
 export interface ProductionStep {
@@ -65,6 +66,7 @@ export interface CategoryItem {
   description?: string;
   icon?: string;
   isFeatured?: boolean;
+  status?: 'active' | 'hidden';
 }
 
 export interface QuoteRequestItem {
@@ -108,6 +110,7 @@ export interface NewsArticle {
   image: string;
   author: string;
   tags: string[];
+  status?: 'active' | 'hidden';
 }
 
 export interface JobOpening {
@@ -124,6 +127,7 @@ export interface JobOpening {
   responsibilities: string[];
   requirements: string[];
   benefits: string[];
+  status?: 'active' | 'hidden';
 }
 
 export interface QuoteFormData {

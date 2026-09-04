@@ -29,8 +29,8 @@ export const HomePage: React.FC<HomePageProps> = ({
 }) => {
   const { t, language } = useLanguage();
   const { newsArticles, jobs } = useData();
-  const latestNews = (newsArticles || []).slice(0, 3);
-  const urgentJobs = (jobs || []).slice(0, 3);
+  const latestNews = (newsArticles || []).filter((a) => a.status !== 'hidden').slice(0, 3);
+  const urgentJobs = (jobs || []).filter((j) => j.status !== 'hidden').slice(0, 3);
 
   const handleCustomQuoteRequest = (specText: string) => {
     onSelectProductForQuote(specText);

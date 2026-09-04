@@ -1,8 +1,7 @@
 import React from 'react';
-import { Phone, Mail, MapPin, Clock, ArrowUpRight, ShieldCheck, Factory, Award } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, ArrowUpRight, Factory, Award } from 'lucide-react';
 import { PageId } from '../types';
 import { useLanguage } from '../i18n/LanguageContext';
-import { LanguageSwitcher } from './LanguageSwitcher';
 
 interface FooterProps {
   onNavigate: (page: PageId) => void;
@@ -77,14 +76,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 {t.nav.careers}
               </button>
             </div>
-
-            {/* In-Footer Language Selector */}
-            <div className="pt-2">
-              <span className="text-[11px] font-mono text-zinc-400 block mb-1.5">
-                {language === 'en' ? 'Select language:' : language === 'id' ? 'Pilih bahasa:' : 'Ngôn ngữ giao diện:'}
-              </span>
-              <LanguageSwitcher variant="footer-inline" />
-            </div>
           </div>
 
           {/* Col 2: Navigation Links (2 cols) */}
@@ -127,15 +118,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button onClick={() => handleNav('contact')} className="hover:text-emerald-700 transition-colors cursor-pointer text-left">
                   {t.nav.contact}
-                </button>
-              </li>
-              <li className="pt-2 border-t border-zinc-200">
-                <button
-                  onClick={() => handleNav('admin')}
-                  className="text-zinc-600 hover:text-emerald-700 transition-colors cursor-pointer text-left flex items-center gap-1.5 font-mono text-[11px] font-bold"
-                >
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Cổng Quản Trị (CMS)</span>
                 </button>
               </li>
             </ul>

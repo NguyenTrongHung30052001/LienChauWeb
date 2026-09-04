@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, PhoneCall, ArrowRight, ShieldCheck, Layers, Sparkles } from 'lucide-react';
+import { Menu, X, PhoneCall, ArrowRight, Layers, Sparkles } from 'lucide-react';
 import { PageId } from '../types';
 import { useLanguage } from '../i18n/LanguageContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -54,27 +54,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           </span>
         </div>
         <div className="flex items-center gap-3 md:gap-4 text-zinc-400 shrink-0">
-          <button
-            onClick={() => handleLinkClick('admin')}
-            className={`flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-xs transition-colors cursor-pointer ${
-              currentPage === 'admin'
-                ? 'bg-emerald-600 text-white font-bold'
-                : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white border border-zinc-700'
-            }`}
-            title="Trang Quản Trị Hệ Thống (CMS)"
-          >
-            <ShieldCheck className="w-3 h-3 text-emerald-400" />
-            <span>Quản Trị CMS</span>
-          </button>
-          <span className="hidden md:inline">•</span>
           <span className="hidden md:inline">{t.nav.standard}</span>
           <span className="hidden md:inline">•</span>
-          <a href="tel:0903822188" className="hidden sm:inline text-emerald-400 hover:text-emerald-300 font-bold">
+          <a href="tel:0903822188" className="text-emerald-400 hover:text-emerald-300 font-bold">
             {t.nav.hotline}: 0903.822.188
           </a>
-          <span className="hidden sm:inline">•</span>
-          {/* Quick Pill Switcher in Header Bar */}
-          <LanguageSwitcher variant="compact-pill" />
         </div>
       </div>
 
@@ -242,13 +226,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               <PhoneCall className="w-4 h-4 text-emerald-600" />
               <span>{t.nav.hotline}: 0988.688.868</span>
             </a>
-            <button
-              onClick={() => handleLinkClick('admin')}
-              className="w-full flex items-center justify-center gap-2 py-2.5 bg-zinc-900 text-white font-mono text-xs uppercase tracking-wider hover:bg-zinc-800 transition-colors rounded-sm cursor-pointer shadow-sm border border-zinc-700"
-            >
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>Cổng Quản Trị CMS</span>
-            </button>
             <button
               onClick={() => handleLinkClick('contact')}
               className="w-full flex items-center justify-center gap-2 py-3 bg-emerald-600 text-white font-bold text-xs uppercase tracking-wider hover:bg-emerald-700 transition-colors rounded-sm cursor-pointer shadow-sm"

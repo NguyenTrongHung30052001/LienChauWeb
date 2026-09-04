@@ -3,6 +3,44 @@ import { useLanguage } from '../i18n/LanguageContext';
 import { Language } from '../i18n/translations';
 import { Globe, Check, ChevronDown } from 'lucide-react';
 
+// SVG Flag Components for reliable cross-platform rendering (Windows, Mac, Linux, iOS, Android)
+export const VietnamFlag: React.FC<{ className?: string }> = ({ className = 'w-5 h-3.5' }) => (
+  <svg viewBox="0 0 30 20" className={`${className} rounded-xs shrink-0 inline-block overflow-hidden shadow-xs border border-zinc-200/60`} aria-label="Cờ Việt Nam">
+    <rect width="30" height="20" fill="#da251d" />
+    <polygon
+      points="15,4 16.545,8.755 21.543,8.755 17.499,11.695 19.044,16.45 15,13.51 10.956,16.45 12.501,11.695 8.457,8.755 13.455,8.755"
+      fill="#ffff00"
+    />
+  </svg>
+);
+
+export const UKFlag: React.FC<{ className?: string }> = ({ className = 'w-5 h-3.5' }) => (
+  <svg viewBox="0 0 60 30" className={`${className} rounded-xs shrink-0 inline-block overflow-hidden shadow-xs border border-zinc-200/60`} aria-label="Flag of United Kingdom">
+    <clipPath id="uk-flag-clip"><rect width="60" height="30" /></clipPath>
+    <g clipPath="url(#uk-flag-clip)">
+      <rect width="60" height="30" fill="#012169" />
+      <path d="M0,0 L60,30 M60,0 L0,30" stroke="#ffffff" strokeWidth="6" />
+      <path d="M0,0 L60,30 M60,0 L0,30" stroke="#c8102e" strokeWidth="2" />
+      <path d="M30,0 v30 M0,15 h60" stroke="#ffffff" strokeWidth="10" />
+      <path d="M30,0 v30 M0,15 h60" stroke="#c8102e" strokeWidth="6" />
+    </g>
+  </svg>
+);
+
+export const IndonesiaFlag: React.FC<{ className?: string }> = ({ className = 'w-5 h-3.5' }) => (
+  <svg viewBox="0 0 30 20" className={`${className} rounded-xs shrink-0 inline-block overflow-hidden shadow-xs border border-zinc-300`} aria-label="Bendera Indonesia">
+    <rect width="30" height="10" fill="#ce1126" />
+    <rect y="10" width="30" height="10" fill="#ffffff" />
+  </svg>
+);
+
+export const FlagIcon: React.FC<{ code: Language; className?: string }> = ({ code, className = 'w-5 h-3.5' }) => {
+  if (code === 'vi') return <VietnamFlag className={className} />;
+  if (code === 'en') return <UKFlag className={className} />;
+  if (code === 'id') return <IndonesiaFlag className={className} />;
+  return null;
+};
+
 interface LanguageSwitcherProps {
   variant?: 'compact-pill' | 'dropdown' | 'mobile-list' | 'footer-inline';
   className?: string;
@@ -27,7 +65,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // 1. Compact Pill (used in Top Bar or Footer)
+  // 1. Compact Pill (fallback)
   if (variant === 'compact-pill') {
     return (
       <div className={`inline-flex items-center bg-zinc-900 border border-zinc-700/80 rounded-sm p-0.5 ${className}`}>
@@ -45,7 +83,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
               title={item.label}
               aria-label={`Switch to ${item.label}`}
             >
-              <span>{item.flag}</span>
+              <FlagIcon code={item.code} className="w-3.5 h-2.5" />
               <span>{item.shortLabel}</span>
             </button>
           );
@@ -75,7 +113,9 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
                     : 'bg-zinc-50 hover:bg-zinc-100 border-zinc-200 text-zinc-700'
                 }`}
               >
-                <span className="text-base leading-none mb-1">{item.flag}</span>
+                <div className="mb-1.5">
+                  <FlagIcon code={item.code} className="w-6 h-4" />
+                </div>
                 <span className="text-[11px] font-bold leading-tight">{item.shortLabel}</span>
                 <span className="text-[9px] text-zinc-500 truncate max-w-[80px]">{item.label}</span>
               </button>
@@ -86,7 +126,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     );
   }
 
-  // 3. Footer Inline Selector
+  // 3. Footer Inline Selector (fallback)
   if (variant === 'footer-inline') {
     return (
       <div className={`flex items-center gap-2 ${className}`}>
@@ -104,7 +144,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
                     : 'text-zinc-400 hover:text-white hover:bg-zinc-700'
                 }`}
               >
-                <span>{item.flag}</span>
+                <FlagIcon code={item.code} className="w-4 h-2.5" />
                 <span>{item.shortLabel}</span>
               </button>
             );
@@ -114,16 +154,16 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
     );
   }
 
-  // 4. Default Dropdown (Desktop Navbar)
+  // 4. Default Dropdown (Desktop Navbar - The Single Main Language Selector)
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 px-2.5 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-800 border border-zinc-200 hover:border-zinc-300 rounded-sm text-xs font-mono font-bold transition-colors cursor-pointer group"
+        className="flex items-center gap-2 px-2.5 py-1.5 bg-zinc-50 hover:bg-zinc-100 text-zinc-800 border border-zinc-200 hover:border-zinc-300 rounded-sm text-xs font-mono font-bold transition-colors cursor-pointer group shadow-xs"
         aria-haspopup="true"
         aria-expanded={isOpen}
       >
-        <span className="text-sm leading-none">{currentOption.flag}</span>
+        <FlagIcon code={currentOption.code} className="w-4.5 h-3" />
         <span>{currentOption.shortLabel}</span>
         <ChevronDown
           className={`w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-600 transition-transform duration-200 ${
@@ -133,9 +173,9 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-1.5 w-48 bg-white border border-zinc-200 rounded-sm shadow-xl py-1.5 z-50 animate-in fade-in slide-in-from-top-1 duration-150 text-left">
+        <div className="absolute right-0 mt-1.5 w-52 bg-white border border-zinc-200 rounded-sm shadow-xl py-1.5 z-50 animate-in fade-in slide-in-from-top-1 duration-150 text-left">
           <div className="px-3 py-1 text-[10px] font-mono text-zinc-400 uppercase tracking-wider border-b border-zinc-100">
-            Language / Ngôn ngữ
+            Ngôn ngữ / Language / Bahasa
           </div>
           {languages.map((item) => {
             const isActive = item.code === language;
@@ -152,8 +192,8 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
                     : 'text-zinc-700 hover:bg-zinc-50'
                 }`}
               >
-                <div className="flex items-center gap-2">
-                  <span className="text-base">{item.flag}</span>
+                <div className="flex items-center gap-2.5">
+                  <FlagIcon code={item.code} className="w-5 h-3.5" />
                   <div className="flex flex-col">
                     <span className="leading-tight">{item.label}</span>
                     <span className="text-[10px] text-zinc-400 font-mono">{item.shortLabel}</span>

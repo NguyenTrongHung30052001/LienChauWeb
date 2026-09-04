@@ -24,7 +24,8 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ onSelectProd
     { id: 'tipping', label: t.productsSec.tabs.tipping },
   ];
 
-  const filteredProducts = (products || []).filter(
+  const visibleProducts = (products || []).filter((p) => p.status !== 'hidden');
+  const filteredProducts = visibleProducts.filter(
     (p) => activeCategory === 'all' || p.category === activeCategory
   ).slice(0, 6);
 
