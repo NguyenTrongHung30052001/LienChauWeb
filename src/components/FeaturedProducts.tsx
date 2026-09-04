@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Product } from '../types';
 import { ProductDetailModal } from './ProductDetailModal';
-import { ArrowRight, SlidersHorizontal, Check, Eye } from 'lucide-react';
+import { ArrowRight, SlidersHorizontal, Check, Eye, PackageOpen } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useData } from '../context/DataContext';
 
@@ -70,91 +70,111 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ onSelectProd
         </div>
 
         {/* Product Cards Grid - Clean, Architectural B2B Presentation */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {filteredProducts.map((product) => (
-            <div
-              key={product.id}
-              className="bg-white border border-zinc-200 hover:border-zinc-400 transition-colors p-5 flex flex-col justify-between rounded-sm shadow-xs group"
-            >
-              <div className="space-y-4">
-                {/* Product Image */}
-                <div
-                  onClick={() => setSelectedProduct(product)}
-                  className="relative aspect-square overflow-hidden bg-zinc-100 border border-zinc-200 rounded-sm cursor-pointer"
-                >
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"
-                    referrerPolicy="no-referrer"
-                  />
-                  {product.badge && (
-                    <span className="absolute top-2.5 left-2.5 px-2 py-0.5 bg-zinc-900 text-white font-mono text-[9px] font-bold uppercase tracking-wider rounded-xs">
-                      {product.badge}
-                    </span>
-                  )}
-                  <span className="absolute bottom-2.5 right-2.5 px-2 py-0.5 bg-white/95 text-zinc-900 font-mono text-[9px] font-bold uppercase tracking-wider border border-zinc-200 rounded-xs shadow-xs">
-                    {t.productsSec.moqLabel}: {product.moq}
-                  </span>
-                </div>
-
-                {/* Product Meta */}
-                <div>
-                  <span className="text-[10px] font-mono text-emerald-700 font-bold uppercase block mb-1">
-                    {product.categoryName || product.category.toUpperCase()}
-                  </span>
-                  <h3
+        {filteredProducts.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {filteredProducts.map((product) => (
+              <div
+                key={product.id}
+                className="bg-white border border-zinc-200 hover:border-zinc-400 transition-colors p-5 flex flex-col justify-between rounded-sm shadow-xs group"
+              >
+                <div className="space-y-4">
+                  {/* Product Image */}
+                  <div
                     onClick={() => setSelectedProduct(product)}
-                    className="text-base font-bold text-zinc-900 uppercase tracking-tight group-hover:text-emerald-700 transition-colors cursor-pointer leading-snug"
+                    className="relative aspect-square overflow-hidden bg-zinc-100 border border-zinc-200 rounded-sm cursor-pointer"
                   >
-                    {product.name}
-                  </h3>
-                  <p className="text-xs text-zinc-600 mt-1 line-clamp-2 leading-relaxed">
-                    {product.subtitle}
-                  </p>
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"
+                      referrerPolicy="no-referrer"
+                    />
+                    {product.badge && (
+                      <span className="absolute top-2.5 left-2.5 px-2 py-0.5 bg-zinc-900 text-white font-mono text-[9px] font-bold uppercase tracking-wider rounded-xs">
+                        {product.badge}
+                      </span>
+                    )}
+                    <span className="absolute bottom-2.5 right-2.5 px-2 py-0.5 bg-white/95 text-zinc-900 font-mono text-[9px] font-bold uppercase tracking-wider border border-zinc-200 rounded-xs shadow-xs">
+                      {t.productsSec.moqLabel}: {product.moq}
+                    </span>
+                  </div>
+
+                  {/* Product Meta */}
+                  <div>
+                    <span className="text-[10px] font-mono text-emerald-700 font-bold uppercase block mb-1">
+                      {product.categoryName || product.category.toUpperCase()}
+                    </span>
+                    <h3
+                      onClick={() => setSelectedProduct(product)}
+                      className="text-base font-bold text-zinc-900 uppercase tracking-tight group-hover:text-emerald-700 transition-colors cursor-pointer leading-snug"
+                    >
+                      {product.name}
+                    </h3>
+                    <p className="text-xs text-zinc-600 mt-1 line-clamp-2 leading-relaxed">
+                      {product.subtitle}
+                    </p>
+                  </div>
+
+                  {/* Technical Specs Box */}
+                  <div className="p-3 bg-zinc-50 border border-zinc-200 rounded-sm text-xs font-mono space-y-1.5 text-zinc-700">
+                    <div className="flex justify-between items-center">
+                      <span className="text-zinc-500 text-[11px] uppercase">
+                        {language === 'en' ? 'Spec:' : language === 'id' ? 'Spesifikasi:' : 'Quy cách:'}
+                      </span>
+                      <span className="font-bold text-zinc-900">{product.widthOrDiameter}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-zinc-500 text-[11px] uppercase">
+                        {language === 'en' ? 'Tensile:' : language === 'id' ? 'Kekuatan Tarik:' : 'Lực kéo đứt:'}
+                      </span>
+                      <span className="font-bold text-emerald-700">{product.tensileStrength}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-zinc-500 text-[11px] uppercase">
+                        {language === 'en' ? 'Fiber Material:' : language === 'id' ? 'Bahan Serat:' : 'Chất liệu sợi:'}
+                      </span>
+                      <span className="font-bold text-zinc-800">{product.material}</span>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Technical Specs Box */}
-                <div className="p-3 bg-zinc-50 border border-zinc-200 rounded-sm text-xs font-mono space-y-1.5 text-zinc-700">
-                  <div className="flex justify-between items-center">
-                    <span className="text-zinc-500 text-[11px] uppercase">
-                      {language === 'en' ? 'Spec:' : language === 'id' ? 'Spesifikasi:' : 'Quy cách:'}
-                    </span>
-                    <span className="font-bold text-zinc-900">{product.widthOrDiameter}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-zinc-500 text-[11px] uppercase">
-                      {language === 'en' ? 'Tensile:' : language === 'id' ? 'Kekuatan Tarik:' : 'Lực kéo đứt:'}
-                    </span>
-                    <span className="font-bold text-emerald-700">{product.tensileStrength}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-zinc-500 text-[11px] uppercase">
-                      {language === 'en' ? 'Fiber Material:' : language === 'id' ? 'Bahan Serat:' : 'Chất liệu sợi:'}
-                    </span>
-                    <span className="font-bold text-zinc-800">{product.material}</span>
-                  </div>
+                {/* Action Buttons */}
+                <div className="pt-4 border-t border-zinc-200 mt-4 flex items-center justify-between gap-3">
+                  <button
+                    onClick={() => setSelectedProduct(product)}
+                    className="px-3.5 py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer rounded-sm"
+                  >
+                    {t.productsSec.viewDetail}
+                  </button>
+                  <button
+                    onClick={() => handleRequestQuote(product.name)}
+                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer rounded-sm shadow-xs"
+                  >
+                    {t.productsSec.requestQuote}
+                  </button>
                 </div>
               </div>
-
-              {/* Action Buttons */}
-              <div className="pt-4 border-t border-zinc-200 mt-4 flex items-center justify-between gap-3">
-                <button
-                  onClick={() => setSelectedProduct(product)}
-                  className="px-3.5 py-2 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer rounded-sm"
-                >
-                  {t.productsSec.viewDetail}
-                </button>
-                <button
-                  onClick={() => handleRequestQuote(product.name)}
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer rounded-sm shadow-xs"
-                >
-                  {t.productsSec.requestQuote}
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="p-12 mb-12 bg-zinc-50 border border-zinc-200 rounded-sm text-center space-y-3">
+            <PackageOpen className="w-10 h-10 mx-auto text-zinc-400" />
+            <h4 className="text-sm font-bold text-zinc-800 uppercase tracking-tight">
+              {language === 'en' ? 'Product catalog is being updated directly from Supabase' : 'Danh mục sản phẩm đang được cập nhật từ máy chủ Supabase'}
+            </h4>
+            <p className="text-xs text-zinc-500 max-w-lg mx-auto leading-relaxed">
+              {language === 'en'
+                ? 'Currently there are no active products in this category on the server. You can contact our technical team for custom OEM development.'
+                : 'Hiện tại chưa có sản phẩm nào trong danh mục này trên hệ thống. Quý khách có thể gửi yêu cầu dệt mẫu hoặc tư vấn kỹ thuật OEM trực tiếp.'}
+            </p>
+            <button
+              onClick={() => onSelectProductForQuote('Yêu Cầu Dệt Mẫu Riêng Theo Tech Pack')}
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer"
+            >
+              {language === 'en' ? 'Request Custom Spec' : 'Gửi Yêu Cầu Quy Cách Riêng'}
+            </button>
+          </div>
+        )}
 
         {/* Bottom Catalog Callout */}
         <div className="p-6 bg-zinc-50 border border-zinc-200 rounded-sm flex flex-col sm:flex-row items-center justify-between gap-4">

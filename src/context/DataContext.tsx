@@ -1,142 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { Product, ProductCategory, NewsArticle, JobOpening, CategoryItem, QuoteRequestItem, JobApplicationItem } from '../types';
-import { PRODUCTS } from '../data/mockData';
-import { NEWS_ARTICLES } from '../data/newsData';
-import { JOB_OPENINGS } from '../data/careersData';
 import { supabase } from '../lib/supabase';
-
-export const INITIAL_CATEGORIES: CategoryItem[] = [
-  {
-    id: 'shoelace',
-    name: 'Dây Giày Thể Thao & Sneaker',
-    nameEn: 'Sports & Sneaker Shoelaces',
-    description: 'Dây dệt tròn bện, bản dẹt thể thao, dây da sáp, dây phản quang cho giày chạy bộ, sneaker và boots.',
-    icon: 'Layers',
-    isFeatured: true
-  },
-  {
-    id: 'webbing',
-    name: 'Dây Đai Dệt Webbing Chịu Lực',
-    nameEn: 'Heavy-Duty Webbing Tapes',
-    description: 'Đai dệt Polyester High-Tenacity, Nylon bản 20mm - 50mm cho balo, túi xách cao cấp, đai an toàn.',
-    icon: 'Shield',
-    isFeatured: true
-  },
-  {
-    id: 'elastic',
-    name: 'Dây Thun Bản & Thun Tròn Co Giãn',
-    nameEn: 'Elastic Bands & Bungee Cords',
-    description: 'Thun bản lưng quần dệt thoi, thun dệt kim, thun tròn đàn hồi hồi phục > 98% chuẩn Oeko-Tex.',
-    icon: 'Sliders',
-    isFeatured: true
-  },
-  {
-    id: 'drawstring',
-    name: 'Dây Luồn Áo Quần & Hoodie',
-    nameEn: 'Hoodie & Sportswear Drawstrings',
-    description: 'Dây luồn tròn rỗng, luồn dẹt thời trang kèm đầu bấm kim loại khắc thương hiệu theo yêu cầu.',
-    icon: 'Sparkles',
-    isFeatured: true
-  },
-  {
-    id: 'tipping',
-    name: 'Gia Công Bấm Đầu Aglet Kim Loại',
-    nameEn: 'Aglet Tipping & Finishing',
-    description: 'Bấm đầu kim loại mạ PVD, khắc laser logo, màng co sinh học tự phân hủy PLA, bọc silicon.',
-    icon: 'Cpu',
-    isFeatured: true
-  },
-  {
-    id: 'new',
-    name: 'Sản Phẩm Mới (2026 & ECO-RPET)',
-    nameEn: 'New Products & Eco Innovations',
-    description: 'Dòng sản phẩm sợi tái chế GRS bảo vệ môi trường, giảm phát thải và dây dạ quang phát sáng ban đêm.',
-    icon: 'Leaf',
-    isFeatured: true
-  },
-  {
-    id: 'fw25',
-    name: 'Bộ Sưu Tập Xu Hướng FW25',
-    nameEn: 'FW25 Collection Trends',
-    description: 'Phối màu xu hướng tông đất trầm, họa tiết bện cổ điển Retro Hiking cho mùa thời trang quốc tế.',
-    icon: 'Award',
-    isFeatured: true
-  }
-];
-
-export const INITIAL_QUOTES: QuoteRequestItem[] = [
-  {
-    id: 'quote-1001',
-    createdAt: '2026-09-03 14:30',
-    fullName: 'Trần Minh Đức',
-    companyName: 'Tập đoàn Giày Biti\'s Hunters',
-    email: 'duc.tm@bitis.com.vn',
-    phone: '0918.234.567',
-    productType: 'Dây Dẹt Thể Thao Sneaker Pro (Bản 8mm)',
-    quantity: '50,000 cặp',
-    lengthOption: '120cm',
-    agletType: 'Kim loại khắc Laser logo Biti\'s',
-    notes: 'Cần gửi mẫu KCS màu Trắng quang học và Đen nhám kèm bảng test lực kéo đứt > 150N.',
-    status: 'new'
-  },
-  {
-    id: 'quote-1002',
-    createdAt: '2026-09-02 09:15',
-    fullName: 'Michael Pham',
-    companyName: 'Apex Footwear OEM (FOB Export)',
-    email: 'michael@apexfootwear.vn',
-    phone: '0903.888.999',
-    productType: 'Dây Dệt Jacquard ECO-RPET 2026',
-    quantity: '120,000 cặp',
-    lengthOption: '140cm',
-    agletType: 'Màng sinh học phân hủy PLA',
-    notes: 'Yêu cầu chứng chỉ GRS Scope Certificate và Oeko-Tex Standard 100 Class 1.',
-    status: 'quoted'
-  },
-  {
-    id: 'quote-1003',
-    createdAt: '2026-08-31 16:45',
-    fullName: 'Lê Thị Thu Thảo',
-    companyName: 'Công ty Cổ phần May Thêu Thể Thao Việt',
-    email: 'thao.le@vietgarment.com',
-    phone: '0938.456.789',
-    productType: 'Dây Thun Bản Lưng Quần Dệt Thoi 40mm',
-    quantity: '20,000 mét',
-    lengthOption: 'Cuộn 100m',
-    agletType: 'Không đầu bấm (Dạng cuộn)',
-    notes: 'Độ giãn 120%, giặt sấy 60 độ C không bai nhão.',
-    status: 'contacted'
-  }
-];
-
-export const INITIAL_APPLICATIONS: JobApplicationItem[] = [
-  {
-    id: 'app-01',
-    jobId: 'job-weaving-eng',
-    jobTitle: 'Kỹ Sư Vận Hành Máy Dệt Bện Tự Động',
-    applicantName: 'Hoàng Văn Nam',
-    applicantEmail: 'nam.hoang.textile@gmail.com',
-    applicantPhone: '0979.112.233',
-    applicantExperience: '4 năm kinh nghiệm máy dệt thoi & dệt kim Đài Loan tại KCN VSIP 1',
-    applicantResumeLink: 'https://drive.google.com/cv-nam-textile.pdf',
-    applicantNote: 'Em có thể đi làm theo ca sản xuất tại KCN Sóng Thần 3 ngay khi nhận việc.',
-    createdAt: '2026-09-01 10:20',
-    status: 'reviewed'
-  },
-  {
-    id: 'app-02',
-    jobId: 'job-qc-lead',
-    jobTitle: 'Trưởng Nhóm Kiểm Soát Chất Lượng (QC Lead)',
-    applicantName: 'Nguyễn Thị Bích Trâm',
-    applicantEmail: 'bichtram.qc@outlook.com',
-    applicantPhone: '0908.654.321',
-    applicantExperience: '5 năm QC chuyền may và phụ liệu giày xuất khẩu chứng chỉ ISO/Oeko-Tex',
-    applicantResumeLink: 'https://linkedin.com/in/bichtram-qc',
-    applicantNote: 'Mong muốn làm việc lâu dài cùng ban điều hành nhà máy Liên Châu.',
-    createdAt: '2026-09-02 15:40',
-    status: 'new'
-  }
-];
 
 interface DataContextType {
   products: Product[];
@@ -149,6 +13,7 @@ interface DataContextType {
   applications: JobApplicationItem[];
   supabaseStatus: 'connected' | 'connecting' | 'error';
   lastSyncTime: string;
+  isLoading: boolean;
   syncFromSupabase: () => Promise<void>;
 
   // Products CRUD
@@ -339,131 +204,110 @@ const mapRowToApplication = (row: any): JobApplicationItem => ({
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [supabaseStatus, setSupabaseStatus] = useState<'connected' | 'connecting' | 'error'>('connecting');
   const [lastSyncTime, setLastSyncTime] = useState<string>('Chưa đồng bộ');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // 1. Products
-  const [products, setProducts] = useState<Product[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.error('Error loading products from localStorage', e);
-    }
-    return PRODUCTS;
-  });
+  // Pure Supabase state: always fetched directly from Supabase tables
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<CategoryItem[]>([]);
+  const [newsArticles, setNewsArticles] = useState<NewsArticle[]>([]);
+  const [jobOpenings, setJobOpenings] = useState<JobOpening[]>([]);
+  const [quotes, setQuotes] = useState<QuoteRequestItem[]>([]);
+  const [applications, setApplications] = useState<JobApplicationItem[]>([]);
 
-  // 2. Categories
-  const [categories, setCategories] = useState<CategoryItem[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEYS.CATEGORIES);
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.error('Error loading categories from localStorage', e);
-    }
-    return INITIAL_CATEGORIES;
-  });
-
-  // 3. News Articles
-  const [newsArticles, setNewsArticles] = useState<NewsArticle[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEYS.NEWS);
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.error('Error loading news from localStorage', e);
-    }
-    return NEWS_ARTICLES;
-  });
-
-  // 4. Job Openings
-  const [jobOpenings, setJobOpenings] = useState<JobOpening[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEYS.JOBS);
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.error('Error loading jobs from localStorage', e);
-    }
-    return JOB_OPENINGS;
-  });
-
-  // 5. Quotes / Leads
-  const [quotes, setQuotes] = useState<QuoteRequestItem[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEYS.QUOTES);
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.error('Error loading quotes from localStorage', e);
-    }
-    return INITIAL_QUOTES;
-  });
-
-  // 6. Applications
-  const [applications, setApplications] = useState<JobApplicationItem[]>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEYS.APPLICATIONS);
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.error('Error loading applications from localStorage', e);
-    }
-    return INITIAL_APPLICATIONS;
-  });
-
-  // Fetch from Supabase
+  // Fetch directly from Supabase
   const syncFromSupabase = useCallback(async () => {
     try {
       setSupabaseStatus('connecting');
+
       // 1. Products
-      const { data: prods, error: prodErr } = await supabase.from('products').select('*').order('created_at', { ascending: false });
+      const { data: prods, error: prodErr } = await supabase
+        .from('products')
+        .select('*')
+        .order('created_at', { ascending: false });
       if (!prodErr && Array.isArray(prods)) {
         setProducts(prods.map(mapRowToProduct));
       }
 
       // 2. Categories
-      const { data: cats, error: catErr } = await supabase.from('categories').select('*').order('created_at', { ascending: true });
+      const { data: cats, error: catErr } = await supabase
+        .from('categories')
+        .select('*')
+        .order('created_at', { ascending: true });
       if (!catErr && Array.isArray(cats)) {
-        setCategories(cats.map(c => ({
-          id: c.id,
-          name: c.name,
-          nameEn: c.name,
-          description: '',
-          icon: 'Layers',
-          isFeatured: true
-        })));
+        setCategories(
+          cats.map((c) => ({
+            id: c.id,
+            name: c.name,
+            nameEn: c.name,
+            description: '',
+            icon: 'Layers',
+            isFeatured: true
+          }))
+        );
       }
 
       // 3. News Articles
-      const { data: arts, error: artErr } = await supabase.from('news_articles').select('*').order('created_at', { ascending: false });
+      const { data: arts, error: artErr } = await supabase
+        .from('news_articles')
+        .select('*')
+        .order('created_at', { ascending: false });
       if (!artErr && Array.isArray(arts)) {
         setNewsArticles(arts.map(mapRowToArticle));
       }
 
       // 4. Jobs
-      const { data: jbs, error: jobErr } = await supabase.from('jobs').select('*').order('created_at', { ascending: false });
+      const { data: jbs, error: jobErr } = await supabase
+        .from('jobs')
+        .select('*')
+        .order('created_at', { ascending: false });
       if (!jobErr && Array.isArray(jbs)) {
         setJobOpenings(jbs.map(mapRowToJob));
       }
 
       // 5. Quotes
-      const { data: qts, error: qtErr } = await supabase.from('quote_requests').select('*').order('created_at', { ascending: false });
+      const { data: qts, error: qtErr } = await supabase
+        .from('quote_requests')
+        .select('*')
+        .order('created_at', { ascending: false });
       if (!qtErr && Array.isArray(qts)) {
         setQuotes(qts.map(mapRowToQuote));
       }
 
       // 6. Applications
-      const { data: apps, error: appErr } = await supabase.from('applications').select('*').order('created_at', { ascending: false });
+      const { data: apps, error: appErr } = await supabase
+        .from('applications')
+        .select('*')
+        .order('created_at', { ascending: false });
       if (!appErr && Array.isArray(apps)) {
         setApplications(apps.map(mapRowToApplication));
       }
 
       setSupabaseStatus('connected');
+      setIsLoading(false);
       const now = new Date();
-      setLastSyncTime(now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+      setLastSyncTime(
+        now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+      );
     } catch (e) {
-      console.error('Supabase initial fetch error:', e);
+      console.error('Supabase fetch error:', e);
       setSupabaseStatus('error');
+      setIsLoading(false);
     }
   }, []);
 
   // Run initial sync on mount
   useEffect(() => {
+    // Clear out any obsolete mock data stored in older sessions
+    try {
+      localStorage.removeItem(STORAGE_KEYS.PRODUCTS);
+      localStorage.removeItem(STORAGE_KEYS.CATEGORIES);
+      localStorage.removeItem(STORAGE_KEYS.NEWS);
+      localStorage.removeItem(STORAGE_KEYS.JOBS);
+      localStorage.removeItem(STORAGE_KEYS.QUOTES);
+      localStorage.removeItem(STORAGE_KEYS.APPLICATIONS);
+    } catch (e) {
+      // ignore
+    }
     syncFromSupabase();
   }, [syncFromSupabase]);
 
@@ -471,18 +315,31 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const channel = supabase
       .channel('supabase-live-sync')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public' },
-        () => {
-          syncFromSupabase();
-        }
-      )
+      .on('postgres_changes', { event: '*', schema: 'public' }, () => {
+        syncFromSupabase();
+      })
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
+  }, [syncFromSupabase]);
+
+  // Auto-sync when window re-gains focus (e.g. user updated Supabase in dashboard tab)
+  useEffect(() => {
+    const handleFocus = () => {
+      syncFromSupabase();
+    };
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [syncFromSupabase]);
+
+  // Periodic polling every 10 seconds to ensure fresh data at all times
+  useEffect(() => {
+    const interval = setInterval(() => {
+      syncFromSupabase();
+    }, 10000);
+    return () => clearInterval(interval);
   }, [syncFromSupabase]);
 
   // Sync to localStorage
@@ -776,6 +633,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Clear local storage and force fresh sync from Supabase
   const clearCacheAndSync = async () => {
+    setIsLoading(true);
     try {
       localStorage.removeItem(STORAGE_KEYS.PRODUCTS);
       localStorage.removeItem(STORAGE_KEYS.CATEGORIES);
@@ -789,24 +647,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await syncFromSupabase();
   };
 
-  // Reset to factory defaults
+  // Reset: clears local cache and strictly reloads directly from Supabase
   const resetToDefaults = () => {
-    setProducts(PRODUCTS);
-    setCategories(INITIAL_CATEGORIES);
-    setNewsArticles(NEWS_ARTICLES);
-    setJobOpenings(JOB_OPENINGS);
-    setQuotes(INITIAL_QUOTES);
-    setApplications(INITIAL_APPLICATIONS);
-    try {
-      localStorage.removeItem(STORAGE_KEYS.PRODUCTS);
-      localStorage.removeItem(STORAGE_KEYS.CATEGORIES);
-      localStorage.removeItem(STORAGE_KEYS.NEWS);
-      localStorage.removeItem(STORAGE_KEYS.JOBS);
-      localStorage.removeItem(STORAGE_KEYS.QUOTES);
-      localStorage.removeItem(STORAGE_KEYS.APPLICATIONS);
-    } catch (e) {
-      console.error('Failed to clear storage', e);
-    }
+    clearCacheAndSync();
   };
 
   // Export JSON
@@ -854,6 +697,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         applications: applications || [],
         supabaseStatus,
         lastSyncTime,
+        isLoading,
         syncFromSupabase,
         addProduct,
         updateProduct,
