@@ -57,22 +57,15 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Brand Logo - Liên Châu */}
         <button
           onClick={() => handleLinkClick('home')}
-          className="flex items-center gap-3 group text-left cursor-pointer shrink-0"
+          className="flex items-center group cursor-pointer shrink-0 py-0.5"
+          title="Liên Châu"
         >
           <img
             src="https://theme.hstatic.net/200000421863/1000815266/14/logo.png?v=607"
             alt="Logo Liên Châu"
-            className="h-10 sm:h-11 w-auto max-w-[140px] object-contain"
+            className="h-12 sm:h-14 w-auto max-w-[190px] object-contain transition-transform group-hover:scale-[1.02]"
             referrerPolicy="no-referrer"
           />
-          <div className="flex flex-col">
-            <span className="font-bold text-base sm:text-lg tracking-tight uppercase text-zinc-900 group-hover:text-emerald-700 transition-colors">
-              LIÊN CHÂU
-            </span>
-            <span className="text-[9px] text-zinc-500 font-medium tracking-tight hidden sm:block">
-              Sản Xuất Dệt May
-            </span>
-          </div>
         </button>
 
         {/* Desktop Navigation */}
@@ -91,7 +84,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               >
                 <span>{link.label}</span>
                 {link.badge && (
-                  <span className="px-1.5 py-0.2 bg-red-50 text-red-600 border border-red-200 text-[9px] font-mono font-bold rounded-sm uppercase">
+                  <span className="px-1.5 py-0.5 bg-red-50 text-red-600 border border-red-200 text-[10px] font-mono font-bold rounded-sm uppercase">
                     {link.badge}
                   </span>
                 )}
@@ -104,7 +97,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </nav>
 
         {/* Desktop Medium Navigation (lg) */}
-        <nav className="hidden lg:flex xl:hidden items-center gap-4 text-[11px] font-bold uppercase tracking-wider text-zinc-600">
+        <nav className="hidden lg:flex xl:hidden items-center gap-4 text-xs font-bold uppercase tracking-wider text-zinc-600">
           {navLinks.map((link) => {
             const isActive = currentPage === link.id;
             return (

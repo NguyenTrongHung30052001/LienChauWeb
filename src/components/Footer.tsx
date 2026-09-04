@@ -26,21 +26,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           
           {/* Col 1: Brand & Intro (4 cols) */}
           <div className="lg:col-span-4 space-y-4">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center">
               <img
                 src="https://theme.hstatic.net/200000421863/1000815266/14/logo.png?v=607"
                 alt="Logo Liên Châu"
-                className="h-10 w-auto max-w-[130px] object-contain"
+                className="h-12 sm:h-14 w-auto max-w-[170px] object-contain"
                 referrerPolicy="no-referrer"
               />
-              <div className="flex flex-col">
-                <span className="text-base sm:text-lg font-bold tracking-tight text-zinc-900 uppercase font-mono">
-                  LIÊN CHÂU
-                </span>
-                <span className="text-[10px] text-zinc-500 font-medium">
-                  Công ty Cổ phần Sản xuất Dệt Liên Châu
-                </span>
-              </div>
             </div>
 
             <p className="text-xs text-zinc-600 leading-relaxed">
@@ -55,7 +47,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             {/* Social Icons & Bo Cong Thuong Badge */}
             <div className="pt-2 space-y-3">
               <div className="space-y-1.5">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 font-mono block">
+                <span className="text-xs font-bold uppercase tracking-wider text-zinc-500 font-mono block">
                   {language === 'en' ? 'Connect With Us' : language === 'id' ? 'Terhubung Dengan Kami' : 'Kết Nối Với Chúng Tôi'}
                 </span>
                 <div className="flex items-center gap-2">
@@ -233,9 +225,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
           {/* Col 4: Factory Coordinates & Map (3 cols) */}
           <div className="lg:col-span-3 space-y-3">
-            <h4 className="text-[11px] font-bold text-zinc-900 uppercase tracking-widest font-mono flex items-center justify-between">
+            <h4 className="text-xs font-bold text-zinc-900 uppercase tracking-widest font-mono flex items-center justify-between">
               <span>{t.footer.contactCol}</span>
-              <span className="text-[10px] text-emerald-700 font-mono font-bold">BÌNH DƯƠNG</span>
+              <span className="text-xs text-emerald-700 font-mono font-bold">BÌNH DƯƠNG</span>
             </h4>
             
             <div className="space-y-2 text-xs text-zinc-600">
