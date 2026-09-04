@@ -142,7 +142,9 @@ interface DataContextType {
   products: Product[];
   categories: CategoryItem[];
   newsArticles: NewsArticle[];
+  articles: NewsArticle[];
   jobOpenings: JobOpening[];
+  jobs: JobOpening[];
   quotes: QuoteRequestItem[];
   applications: JobApplicationItem[];
   supabaseStatus: 'connected' | 'connecting' | 'error';
@@ -710,15 +712,28 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Applications Actions
-  const addApplication = (appData: Omit<JobApplicationItem, 'id' | 'createdAt' | 'status'>): JobApplicationItem => {
+  const addApplication = (appData: Omit<JobApplicationItem, 'id' | 'createdAt' | 'status'> | any): JobApplicationItem => {
     const dateStr = new Date().toISOString().replace('T', ' ').substring(0, 16);
+    const applicantName = appData.applicantName || appData.name || '';
+    const applicantEmail = appData.applicantEmail || appData.email || '';
+    const applicantPhone = appData.applicantPhone || appData.phone || '';
+    const applicantExperience = appData.applicantExperience || appData.experience || '';
+    const applicantResumeLink = appData.applicantResumeLink || appData.resumeLink || '';
+    const applicantNote = appData.applicantNote || appData.note || '';
+
     const newApp: JobApplicationItem = {
       ...appData,
       id: `app-${Date.now()}`,
+      applicantName,
+      applicantEmail,
+      applicantPhone,
+      applicantExperience,
+      applicantResumeLink,
+      applicantNote,
       createdAt: dateStr,
       status: 'new'
     };
-    setApplications(prev => [newApp, ...prev]);
+    setApplications(prev => [newApp, ...(prev || [])]);
     supabase.from('applications').insert([{
       id: newApp.id,
       job_id: newApp.jobId,
@@ -803,12 +818,14 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   return (
     <DataContext.Provider
       value={{
-        products,
-        categories,
-        newsArticles,
-        jobOpenings,
-        quotes,
-        applications,
+        products: products || [],
+        categories: categories || [],
+        newsArticles: newsArticles || [],
+        articles: newsArticles || [],
+        jobOpenings: jobOpenings || [],
+        jobs: jobOpenings || [],
+        quotes: quotes || [],
+        applications: applications || [],
         supabaseStatus,
         lastSyncTime,
         syncFromSupabase,

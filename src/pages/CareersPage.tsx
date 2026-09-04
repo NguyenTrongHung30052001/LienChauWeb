@@ -15,7 +15,8 @@ interface CareersPageProps {
 
 export const CareersPage: React.FC<CareersPageProps> = () => {
   const { t, language } = useLanguage();
-  const { jobs, addApplication } = useData();
+  const { jobs = [], jobOpenings = [], addApplication } = useData();
+  const currentJobs = jobs || jobOpenings || [];
   const [selectedDepartment, setSelectedDepartment] = useState<string>('all');
   const [viewingJob, setViewingJob] = useState<JobOpening | null>(null);
   const [applyingJob, setApplyingJob] = useState<JobOpening | null>(null);
@@ -37,7 +38,7 @@ export const CareersPage: React.FC<CareersPageProps> = () => {
     { id: 'Kinh Doanh & Phát Triển Thị Trường', label: language === 'en' ? 'B2B Sales' : language === 'id' ? 'Penjualan B2B' : 'Kinh Doanh B2B' }
   ];
 
-  const filteredJobs = jobs.filter((job) => {
+  const filteredJobs = (currentJobs || []).filter((job) => {
     return selectedDepartment === 'all' || job.department === selectedDepartment;
   });
 
@@ -54,12 +55,12 @@ export const CareersPage: React.FC<CareersPageProps> = () => {
       addApplication({
         jobId: applyingJob?.id || 'general',
         jobTitle: applyingJob?.title || 'Ứng tuyển chung',
-        name: applicantName,
-        email: applicantEmail,
-        phone: applicantPhone,
-        experience: applicantExperience,
-        resumeLink: applicantResumeLink,
-        note: applicantNote
+        applicantName,
+        applicantEmail,
+        applicantPhone,
+        applicantExperience,
+        applicantResumeLink,
+        applicantNote
       });
       setIsSubmitting(false);
       setSubmitSuccess(true);

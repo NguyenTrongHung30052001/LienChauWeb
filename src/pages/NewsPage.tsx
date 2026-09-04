@@ -10,7 +10,8 @@ interface NewsPageProps {
 
 export const NewsPage: React.FC<NewsPageProps> = ({ onNavigateToContact }) => {
   const { t, language } = useLanguage();
-  const { articles } = useData();
+  const { articles = [], newsArticles = [] } = useData();
+  const currentArticles = articles || newsArticles || [];
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
@@ -24,7 +25,7 @@ export const NewsPage: React.FC<NewsPageProps> = ({ onNavigateToContact }) => {
     { id: 'Sự Kiện', label: language === 'en' ? 'Events & Expos' : language === 'id' ? 'Acara & Pameran' : 'Sự Kiện & Triển Lãm' }
   ];
 
-  const filteredArticles = articles.filter((article) => {
+  const filteredArticles = (currentArticles || []).filter((article) => {
     const matchesCategory = selectedCategory === 'all' || article.category === selectedCategory;
     const matchesSearch =
       article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -33,7 +34,7 @@ export const NewsPage: React.FC<NewsPageProps> = ({ onNavigateToContact }) => {
     return matchesCategory && matchesSearch;
   });
 
-  const featuredArticle = articles[0];
+  const featuredArticle = currentArticles && currentArticles.length > 0 ? currentArticles[0] : null;
 
   return (
     <div className="bg-white text-zinc-900 pt-28 pb-20">

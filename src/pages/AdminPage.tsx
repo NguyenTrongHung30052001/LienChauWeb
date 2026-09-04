@@ -146,7 +146,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
 
   // Filtered lists
   const filteredProducts = useMemo(() => {
-    return products.filter((p) => {
+    return (products || []).filter((p) => {
       const matchCat = productCategoryFilter === 'all' || p.category === productCategoryFilter;
       const matchSearch =
         p.name.toLowerCase().includes(productSearch.toLowerCase()) ||
@@ -157,7 +157,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
   }, [products, productCategoryFilter, productSearch]);
 
   const filteredNews = useMemo(() => {
-    return newsArticles.filter((a) => {
+    return (newsArticles || []).filter((a) => {
       return (
         a.title.toLowerCase().includes(newsSearch.toLowerCase()) ||
         a.category.toLowerCase().includes(newsSearch.toLowerCase()) ||
@@ -167,7 +167,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
   }, [newsArticles, newsSearch]);
 
   const filteredJobs = useMemo(() => {
-    return jobOpenings.filter((j) => {
+    return (jobOpenings || []).filter((j) => {
       return (
         j.title.toLowerCase().includes(careersSearch.toLowerCase()) ||
         j.department.toLowerCase().includes(careersSearch.toLowerCase()) ||
@@ -177,16 +177,16 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
   }, [jobOpenings, careersSearch]);
 
   const filteredQuotes = useMemo(() => {
-    return quotes.filter((q) => {
+    return (quotes || []).filter((q) => {
       if (quotesFilter === 'all') return true;
       return q.status === quotesFilter;
     });
   }, [quotes, quotesFilter]);
 
   // Quick stats
-  const pendingQuotesCount = quotes.filter((q) => q.status === 'new').length;
-  const urgentJobsCount = jobOpenings.filter((j) => j.urgent).length;
-  const newProductsCount = products.filter((p) => p.isNew).length;
+  const pendingQuotesCount = (quotes || []).filter((q) => q.status === 'new').length;
+  const urgentJobsCount = (jobOpenings || []).filter((j) => j.urgent).length;
+  const newProductsCount = (products || []).filter((p) => p.isNew).length;
 
   return (
     <div className="min-h-screen bg-zinc-100 text-zinc-900 flex flex-col font-sans pt-24 pb-16">
@@ -807,8 +807,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {categories.map((cat) => {
-                  const productCount = products.filter((p) => p.category === cat.id).length;
+                {(categories || []).map((cat) => {
+                  const productCount = (products || []).filter((p) => p.category === cat.id).length;
                   return (
                     <div
                       key={cat.id}

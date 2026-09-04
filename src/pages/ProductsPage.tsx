@@ -33,13 +33,13 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
   ];
 
   // Merge custom categories that might have been added in Admin
-  const additionalCategories = customCategories
+  const additionalCategories = (customCategories || [])
     .filter(c => !defaultCategoryTabs.some(d => d.id === c.id))
     .map(c => ({ id: c.id, label: c.name }));
 
   const categories = [...defaultCategoryTabs, ...additionalCategories];
 
-  const filteredProducts = products.filter((product) => {
+  const filteredProducts = (products || []).filter((product) => {
     const matchesCategory = activeCategory === 'all' || product.category === activeCategory;
     const matchesSearch =
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
