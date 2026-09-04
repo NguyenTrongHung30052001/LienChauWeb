@@ -55,7 +55,46 @@ export type PageId =
   | 'process'
   | 'news'
   | 'careers'
-  | 'contact';
+  | 'contact'
+  | 'admin';
+
+export interface CategoryItem {
+  id: string;
+  name: string;
+  nameEn?: string;
+  description?: string;
+  icon?: string;
+  isFeatured?: boolean;
+}
+
+export interface QuoteRequestItem {
+  id: string;
+  createdAt: string;
+  fullName: string;
+  companyName: string;
+  email: string;
+  phone: string;
+  productType: string;
+  quantity: string;
+  lengthOption: string;
+  agletType: string;
+  notes: string;
+  status: 'new' | 'contacted' | 'quoted' | 'closed';
+}
+
+export interface JobApplicationItem {
+  id: string;
+  jobId: string;
+  jobTitle: string;
+  applicantName: string;
+  applicantEmail: string;
+  applicantPhone: string;
+  applicantExperience: string;
+  applicantResumeLink?: string;
+  applicantNote?: string;
+  createdAt: string;
+  status: 'new' | 'reviewed' | 'interview' | 'rejected';
+}
 
 export interface NewsArticle {
   id: string;

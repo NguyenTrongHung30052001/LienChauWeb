@@ -139,10 +139,10 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigateToContact, onNav
           </h1>
           <p className="text-zinc-600 text-xs sm:text-sm max-w-3xl leading-relaxed">
             {language === 'en'
-              ? 'Established in 2010 in the Song Than 3 Industrial Zone, Binh Duong, Lien Chau Co., Ltd. has developed into a premier shoelace, webbing, elastic tape, and drawstring manufacturing partner for over 650 global brands and OEM factories.'
+              ? 'Established in 2010 in the Song Than 3 Industrial Zone, Binh Duong, Lien Chau Textile Manufacturing Joint Stock Company has developed into a premier shoelace, webbing, elastic tape, and drawstring manufacturing partner for over 650 global brands and OEM factories.'
               : language === 'id'
               ? 'Didirikan pada tahun 2010 di Kawasan Industri Song Than 3, Binh Duong, Lien Chau Co., Ltd. telah berkembang menjadi mitra manufaktur tali sepatu, pita anyam, tali elastis, dan tali serut terpercaya bagi lebih dari 650 merek global dan pabrik OEM.'
-              : 'Thành lập từ năm 2010 tại trung tâm công nghiệp dệt may Bình Dương, Công ty TNHH Liên Châu đã phát triển thành nhà máy sản xuất phụ liệu dây giày, webbing, dây thun và dây luồn uy tín hàng đầu cho hơn 650 thương hiệu và tập đoàn giày quốc tế.'}
+              : 'Thành lập từ năm 2010 tại trung tâm công nghiệp dệt may Bình Dương, Công ty Cổ phần Sản xuất Dệt Liên Châu đã phát triển thành nhà máy sản xuất phụ liệu dây giày, webbing, dây thun và dây luồn uy tín hàng đầu cho hơn 650 thương hiệu và tập đoàn giày quốc tế.'}
           </p>
         </div>
 

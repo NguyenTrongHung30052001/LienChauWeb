@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Send, CheckCircle2, Loader2, PhoneCall, Mail, MapPin, Calculator, FileCheck } from 'lucide-react';
 import { QuoteFormData } from '../types';
 import { useLanguage } from '../i18n/LanguageContext';
+import { useData } from '../context/DataContext';
 
 interface QuoteFormProps {
   initialProduct?: string;
@@ -10,6 +11,7 @@ interface QuoteFormProps {
 
 export const QuoteForm: React.FC<QuoteFormProps> = ({ initialProduct = '', onSuccess }) => {
   const { t, language } = useLanguage();
+  const { addQuote } = useData();
 
   const [formData, setFormData] = useState<QuoteFormData>({
     fullName: '',
@@ -83,10 +85,14 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({ initialProduct = '', onSuc
 
     setTimeout(() => {
       const code = 'LC-' + Math.floor(100000 + Math.random() * 900000);
+      addQuote({
+        ...formData,
+        refCode: code
+      });
       setSubmittedRefCode(code);
       setStatus('success');
       if (onSuccess) onSuccess();
-    }, 900);
+    }, 700);
   };
 
   const handleReset = () => {

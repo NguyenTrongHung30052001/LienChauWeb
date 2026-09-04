@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { PRODUCTS } from '../data/mockData';
 import { Product, ProductCategory } from '../types';
 import { Search, Filter, Sparkles, Layers, ArrowRight, Check, X } from 'lucide-react';
 import { ProductDetailModal } from '../components/ProductDetailModal';
 import { useLanguage } from '../i18n/LanguageContext';
+import { useData } from '../context/DataContext';
 
 interface ProductsPageProps {
   onSelectProductForQuote: (productName: string) => void;
@@ -15,11 +15,13 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
   onNavigateToContact
 }) => {
   const { t, language } = useLanguage();
+  const { products, categories: customCategories } = useData();
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  const categories = [
+  // Dynamic categories from context if available, otherwise fallback tabs
+  const defaultCategoryTabs = [
     { id: 'all', label: t.products.tabAll },
     { id: 'new', label: t.products.tabNew },
     { id: 'shoelace', label: t.products.tabShoelace },
@@ -30,7 +32,14 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
     { id: 'fw25', label: t.products.tabFW25 }
   ];
 
-  const filteredProducts = PRODUCTS.filter((product) => {
+  // Merge custom categories that might have been added in Admin
+  const additionalCategories = customCategories
+    .filter(c => !defaultCategoryTabs.some(d => d.id === c.id))
+    .map(c => ({ id: c.id, label: c.name }));
+
+  const categories = [...defaultCategoryTabs, ...additionalCategories];
+
+  const filteredProducts = products.filter((product) => {
     const matchesCategory = activeCategory === 'all' || product.category === activeCategory;
     const matchesSearch =
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||

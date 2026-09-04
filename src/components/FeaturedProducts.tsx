@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { PRODUCTS } from '../data/mockData';
 import { Product } from '../types';
 import { ProductDetailModal } from './ProductDetailModal';
 import { ArrowRight, SlidersHorizontal, Check, Eye } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
+import { useData } from '../context/DataContext';
 
 interface FeaturedProductsProps {
   onSelectProductForQuote: (productName: string) => void;
@@ -11,6 +11,7 @@ interface FeaturedProductsProps {
 
 export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ onSelectProductForQuote }) => {
   const { t, language } = useLanguage();
+  const { products } = useData();
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
@@ -23,7 +24,7 @@ export const FeaturedProducts: React.FC<FeaturedProductsProps> = ({ onSelectProd
     { id: 'tipping', label: t.productsSec.tabs.tipping },
   ];
 
-  const filteredProducts = PRODUCTS.filter(
+  const filteredProducts = products.filter(
     (p) => activeCategory === 'all' || p.category === activeCategory
   ).slice(0, 6);
 

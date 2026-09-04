@@ -1,6 +1,7 @@
 {
-  "name": "Liên Châu - Nhà Máy Sản Xuất Dây Giày",
-  "description": "Công ty TNHH Liên Châu - Nhà máy sản xuất dây giày, webbing, dây thun, dây luồn, gia công tipping và bộ sưu tập FW25 tại KCN Sóng Thần 3, Bình Dương.",
+  "name": "Công ty Cổ phần Sản xuất Dệt Liên Châu",
+  "description": "Công ty Cổ phần Sản xuất Dệt Liên Châu - Nhà máy sản xuất dây giày, webbing, dây thun, dây luồn, gia công tipping và phụ liệu dệt may xuất khẩu tại KCN Sóng Thần 3, Bình Dương.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
+

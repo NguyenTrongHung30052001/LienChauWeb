@@ -34,12 +34,17 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 className="h-10 w-auto max-w-[130px] object-contain"
                 referrerPolicy="no-referrer"
               />
-              <span className="text-xl font-bold tracking-tight text-zinc-900 flex items-center gap-1.5 uppercase font-mono">
-                LIÊN CHÂU
-                <span className="text-[9px] px-1.5 py-0.5 bg-emerald-50 text-emerald-800 font-mono font-bold border border-emerald-200 rounded-sm">
-                  OEM
+              <div className="flex flex-col">
+                <span className="text-base sm:text-lg font-bold tracking-tight text-zinc-900 flex items-center gap-1.5 uppercase font-mono">
+                  LIÊN CHÂU
+                  <span className="text-[9px] px-1.5 py-0.2 bg-emerald-50 text-emerald-800 font-mono font-bold border border-emerald-200 rounded-sm">
+                    JSC
+                  </span>
                 </span>
-              </span>
+                <span className="text-[10px] text-zinc-500 font-medium">
+                  Công ty Cổ phần Sản xuất Dệt Liên Châu
+                </span>
+              </div>
             </div>
 
             <p className="text-xs text-zinc-600 leading-relaxed">
@@ -122,6 +127,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button onClick={() => handleNav('contact')} className="hover:text-emerald-700 transition-colors cursor-pointer text-left">
                   {t.nav.contact}
+                </button>
+              </li>
+              <li className="pt-2 border-t border-zinc-200">
+                <button
+                  onClick={() => handleNav('admin')}
+                  className="text-zinc-600 hover:text-emerald-700 transition-colors cursor-pointer text-left flex items-center gap-1.5 font-mono text-[11px] font-bold"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Cổng Quản Trị (CMS)</span>
                 </button>
               </li>
             </ul>

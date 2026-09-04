@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { NEWS_ARTICLES } from '../data/newsData';
 import { NewsArticle } from '../types';
 import { Calendar, Clock, ArrowRight, Tag, User, Search, X, Share2, BookOpen } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
+import { useData } from '../context/DataContext';
 
 interface NewsPageProps {
   onNavigateToContact: () => void;
@@ -10,6 +10,7 @@ interface NewsPageProps {
 
 export const NewsPage: React.FC<NewsPageProps> = ({ onNavigateToContact }) => {
   const { t, language } = useLanguage();
+  const { articles } = useData();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
@@ -23,16 +24,16 @@ export const NewsPage: React.FC<NewsPageProps> = ({ onNavigateToContact }) => {
     { id: 'Sự Kiện', label: language === 'en' ? 'Events & Expos' : language === 'id' ? 'Acara & Pameran' : 'Sự Kiện & Triển Lãm' }
   ];
 
-  const filteredArticles = NEWS_ARTICLES.filter((article) => {
+  const filteredArticles = articles.filter((article) => {
     const matchesCategory = selectedCategory === 'all' || article.category === selectedCategory;
     const matchesSearch =
       article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       article.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.tags.some((tg) => tg.toLowerCase().includes(searchQuery.toLowerCase()));
+      (article.tags && article.tags.some((tg) => tg.toLowerCase().includes(searchQuery.toLowerCase())));
     return matchesCategory && matchesSearch;
   });
 
-  const featuredArticle = NEWS_ARTICLES[0];
+  const featuredArticle = articles[0];
 
   return (
     <div className="bg-white text-zinc-900 pt-28 pb-20">

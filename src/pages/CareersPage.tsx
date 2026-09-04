@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { JOB_OPENINGS, COMPANY_PERKS } from '../data/careersData';
+import { COMPANY_PERKS } from '../data/careersData';
 import { JobOpening } from '../types';
 import { 
   Briefcase, MapPin, Clock, DollarSign, Calendar, ChevronRight, 
@@ -7,6 +7,7 @@ import {
   HeartHandshake, X, FileText, AlertCircle, Sparkles 
 } from 'lucide-react';
 import { useLanguage } from '../i18n/LanguageContext';
+import { useData } from '../context/DataContext';
 
 interface CareersPageProps {
   onNavigateToContact: () => void;
@@ -14,6 +15,7 @@ interface CareersPageProps {
 
 export const CareersPage: React.FC<CareersPageProps> = () => {
   const { t, language } = useLanguage();
+  const { jobs, addApplication } = useData();
   const [selectedDepartment, setSelectedDepartment] = useState<string>('all');
   const [viewingJob, setViewingJob] = useState<JobOpening | null>(null);
   const [applyingJob, setApplyingJob] = useState<JobOpening | null>(null);
@@ -35,7 +37,7 @@ export const CareersPage: React.FC<CareersPageProps> = () => {
     { id: 'Kinh Doanh & Phát Triển Thị Trường', label: language === 'en' ? 'B2B Sales' : language === 'id' ? 'Penjualan B2B' : 'Kinh Doanh B2B' }
   ];
 
-  const filteredJobs = JOB_OPENINGS.filter((job) => {
+  const filteredJobs = jobs.filter((job) => {
     return selectedDepartment === 'all' || job.department === selectedDepartment;
   });
 
@@ -49,9 +51,19 @@ export const CareersPage: React.FC<CareersPageProps> = () => {
     e.preventDefault();
     setIsSubmitting(true);
     setTimeout(() => {
+      addApplication({
+        jobId: applyingJob?.id || 'general',
+        jobTitle: applyingJob?.title || 'Ứng tuyển chung',
+        name: applicantName,
+        email: applicantEmail,
+        phone: applicantPhone,
+        experience: applicantExperience,
+        resumeLink: applicantResumeLink,
+        note: applicantNote
+      });
       setIsSubmitting(false);
       setSubmitSuccess(true);
-    }, 900);
+    }, 600);
   };
 
   const getPerkIcon = (name: string) => {

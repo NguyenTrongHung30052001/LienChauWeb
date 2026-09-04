@@ -9,8 +9,10 @@ import { ProcessPage } from './pages/ProcessPage';
 import { NewsPage } from './pages/NewsPage';
 import { CareersPage } from './pages/CareersPage';
 import { ContactPage } from './pages/ContactPage';
-import { PhoneCall, FileText, ArrowUp } from 'lucide-react';
+import { AdminPage } from './pages/AdminPage';
+import { PhoneCall, FileText, ArrowUp, ShieldCheck } from 'lucide-react';
 import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
+import { DataProvider } from './context/DataContext';
 
 function AppContent() {
   const { t } = useLanguage();
@@ -22,7 +24,7 @@ function AppContent() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#/', '').replace('#', '');
-      const validPages: PageId[] = ['home', 'about', 'products', 'process', 'news', 'careers', 'contact'];
+      const validPages: PageId[] = ['home', 'about', 'products', 'process', 'news', 'careers', 'contact', 'admin'];
       if (validPages.includes(hash as PageId)) {
         setCurrentPage(hash as PageId);
       }
@@ -113,9 +115,15 @@ function AppContent() {
             initialProduct={selectedProductForQuote}
           />
         )}
+
+        {currentPage === 'admin' && (
+          <AdminPage
+            onNavigateToPublicPage={navigateTo}
+          />
+        )}
       </main>
 
-      {/* 3. Global Footer */}
+      {/* 3. Global Footer (Hide if inside admin or keep footer) */}
       <Footer onNavigate={navigateTo} />
 
       {/* 4. Floating Action Controls */}
@@ -132,15 +140,17 @@ function AppContent() {
         )}
 
         {/* Quick Quote Floating Button */}
-        <button
-          onClick={() => navigateTo('contact')}
-          className="pointer-events-auto flex items-center gap-2 px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white font-bold uppercase tracking-wider text-xs shadow-xl hover:scale-105 active:scale-95 transition-all group font-mono rounded-full border border-zinc-700 cursor-pointer"
-          title={t.nav.mobileQuoteFull}
-        >
-          <FileText className="w-3.5 h-3.5 text-emerald-400 group-hover:rotate-12 transition-transform" />
-          <span className="hidden sm:inline">{t.nav.mobileQuoteBtn}</span>
-          <span className="sm:hidden">{t.nav.mobileQuoteBtn}</span>
-        </button>
+        {currentPage !== 'admin' && (
+          <button
+            onClick={() => navigateTo('contact')}
+            className="pointer-events-auto flex items-center gap-2 px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white font-bold uppercase tracking-wider text-xs shadow-xl hover:scale-105 active:scale-95 transition-all group font-mono rounded-full border border-zinc-700 cursor-pointer"
+            title={t.nav.mobileQuoteFull}
+          >
+            <FileText className="w-3.5 h-3.5 text-emerald-400 group-hover:rotate-12 transition-transform" />
+            <span className="hidden sm:inline">{t.nav.mobileQuoteBtn}</span>
+            <span className="sm:hidden">{t.nav.mobileQuoteBtn}</span>
+          </button>
+        )}
 
         {/* Hotline Direct Call Button */}
         <a
@@ -160,7 +170,9 @@ function AppContent() {
 export default function App() {
   return (
     <LanguageProvider>
-      <AppContent />
+      <DataProvider>
+        <AppContent />
+      </DataProvider>
     </LanguageProvider>
   );
 }
