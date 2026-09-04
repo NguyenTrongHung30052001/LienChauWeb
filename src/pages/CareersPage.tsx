@@ -163,67 +163,103 @@ export const CareersPage: React.FC<CareersPageProps> = () => {
 
           {/* Job List */}
           <div className="space-y-4">
-            {filteredJobs.map((job) => (
-              <div
-                key={job.id}
-                className="p-5 sm:p-6 bg-white border border-zinc-200 hover:border-emerald-500 transition-all rounded-sm shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-6"
-              >
-                <div className="space-y-2.5 max-w-3xl">
-                  <div className="flex flex-wrap items-center gap-2.5">
-                    <span className="px-2.5 py-0.5 bg-emerald-50 border border-emerald-200 text-emerald-800 font-mono text-[10px] font-bold uppercase tracking-wider rounded-sm">
-                      {job.department}
-                    </span>
-                    {job.urgent && (
-                      <span className="px-2 py-0.5 bg-red-50 border border-red-200 text-red-700 font-mono text-[9px] font-bold uppercase tracking-wider rounded-sm animate-pulse">
-                        {language === 'en' ? 'Urgent' : language === 'id' ? 'Mendesak' : 'Tuyển Gấp'}
-                      </span>
-                    )}
-                  </div>
-
-                  <h3 className="text-lg sm:text-xl font-bold uppercase tracking-tight text-zinc-900 hover:text-emerald-700 transition-colors">
-                    {job.title}
-                  </h3>
-
-                  <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-zinc-600 font-mono">
-                    <span className="flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-emerald-600" />
-                      KCN Sóng Thần 3, Bình Dương
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
-                      <strong className="text-emerald-700">{job.salary}</strong>
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <Briefcase className="w-3.5 h-3.5 text-emerald-600" />
-                      {job.experience}
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-zinc-400" />
-                      {language === 'en' ? 'Deadline:' : language === 'id' ? 'Batas Waktu:' : 'Hạn nộp:'} {job.deadline}
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-zinc-600 line-clamp-2 leading-relaxed">
-                    {job.description}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-3 shrink-0">
-                  <button
-                    onClick={() => setViewingJob(job)}
-                    className="px-4 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer rounded-sm"
-                  >
-                    {language === 'en' ? 'View Details' : language === 'id' ? 'Lihat Detail' : 'Xem Chi Tiết'}
-                  </button>
-                  <button
-                    onClick={() => handleApplyClick(job)}
-                    className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer rounded-sm shadow-sm"
-                  >
-                    {language === 'en' ? 'Apply Now' : language === 'id' ? 'Lamar Sekarang' : 'Ứng Tuyển Ngay'}
-                  </button>
-                </div>
+            {filteredJobs.length === 0 ? (
+              <div className="p-10 text-center bg-zinc-50 border border-zinc-200 rounded-sm">
+                <Briefcase className="w-10 h-10 text-zinc-400 mx-auto mb-3" />
+                <h3 className="text-base font-bold text-zinc-800 uppercase tracking-tight mb-1">
+                  {language === 'en' ? 'No Active Vacancies Currently' : language === 'id' ? 'Tidak Ada Lowongan Saat Ini' : 'Hiện Chưa Có Vị Trí Tuyển Dụng Mới'}
+                </h3>
+                <p className="text-xs text-zinc-500 max-w-md mx-auto mb-4">
+                  {language === 'en'
+                    ? 'All previous openings have been filled. You are still welcome to submit an open general application for future opportunities.'
+                    : language === 'id'
+                    ? 'Semua posisi saat ini telah terisi. Anda tetap dipersilakan mengirimkan CV umum untuk kesempatan berikutnya.'
+                    : 'Các vị trí tuyển dụng trước đó đã hoàn tất tuyển chọn. Quý ứng viên có thể gửi hồ sơ tự do bên dưới để bộ phận nhân sự lưu trữ và chủ động liên hệ khi có nhu cầu mới.'}
+                </p>
+                <button
+                  onClick={() => handleApplyClick({
+                    id: 'general',
+                    title: 'Ứng tuyển tự do / General Application',
+                    department: 'Nhân Sự & Tuyển Dụng',
+                    location: 'KCN Sóng Thần 3, Bình Dương',
+                    type: 'Toàn thời gian',
+                    salary: 'Thỏa thuận',
+                    experience: 'Tùy vị trí',
+                    deadline: 'Thường xuyên',
+                    description: 'Hồ sơ tự do gửi tới ban quản lý nhân sự nhà máy Dệt Liên Châu.',
+                    requirements: [],
+                    responsibilities: [],
+                    benefits: []
+                  })}
+                  className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider rounded-sm transition-colors cursor-pointer inline-flex items-center gap-2"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  {language === 'en' ? 'Submit General Application' : language === 'id' ? 'Kirim Lamaran Umum' : 'Gửi Hồ Sơ Ứng Tuyển Tự Do'}
+                </button>
               </div>
-            ))}
+            ) : (
+              filteredJobs.map((job) => (
+                <div
+                  key={job.id}
+                  className="p-5 sm:p-6 bg-white border border-zinc-200 hover:border-emerald-500 transition-all rounded-sm shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-6"
+                >
+                  <div className="space-y-2.5 max-w-3xl">
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <span className="px-2.5 py-0.5 bg-emerald-50 border border-emerald-200 text-emerald-800 font-mono text-[10px] font-bold uppercase tracking-wider rounded-sm">
+                        {job.department}
+                      </span>
+                      {job.urgent && (
+                        <span className="px-2 py-0.5 bg-red-50 border border-red-200 text-red-700 font-mono text-[9px] font-bold uppercase tracking-wider rounded-sm animate-pulse">
+                          {language === 'en' ? 'Urgent' : language === 'id' ? 'Mendesak' : 'Tuyển Gấp'}
+                        </span>
+                      )}
+                    </div>
+
+                    <h3 className="text-lg sm:text-xl font-bold uppercase tracking-tight text-zinc-900 hover:text-emerald-700 transition-colors">
+                      {job.title}
+                    </h3>
+
+                    <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-zinc-600 font-mono">
+                      <span className="flex items-center gap-1.5">
+                        <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+                        KCN Sóng Thần 3, Bình Dương
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
+                        <strong className="text-emerald-700">{job.salary}</strong>
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <Briefcase className="w-3.5 h-3.5 text-emerald-600" />
+                        {job.experience}
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <Calendar className="w-3.5 h-3.5 text-zinc-400" />
+                        {language === 'en' ? 'Deadline:' : language === 'id' ? 'Batas Waktu:' : 'Hạn nộp:'} {job.deadline}
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-zinc-600 line-clamp-2 leading-relaxed">
+                      {job.description}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-3 shrink-0">
+                    <button
+                      onClick={() => setViewingJob(job)}
+                      className="px-4 py-2.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer rounded-sm"
+                    >
+                      {language === 'en' ? 'View Details' : language === 'id' ? 'Lihat Detail' : 'Xem Chi Tiết'}
+                    </button>
+                    <button
+                      onClick={() => handleApplyClick(job)}
+                      className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer rounded-sm shadow-sm"
+                    >
+                      {language === 'en' ? 'Apply Now' : language === 'id' ? 'Lamar Sekarang' : 'Ứng Tuyển Ngay'}
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
 

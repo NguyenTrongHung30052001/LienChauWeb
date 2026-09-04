@@ -183,6 +183,7 @@ interface DataContextType {
   deleteApplication: (id: string) => void;
 
   // Backup & Reset
+  clearCacheAndSync: () => Promise<void>;
   resetToDefaults: () => void;
   exportDataJSON: () => string;
   importDataJSON: (jsonStr: string) => boolean;
@@ -411,52 +412,44 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSupabaseStatus('connecting');
       // 1. Products
       const { data: prods, error: prodErr } = await supabase.from('products').select('*').order('created_at', { ascending: false });
-      if (!prodErr && prods && prods.length > 0) {
+      if (!prodErr && Array.isArray(prods)) {
         setProducts(prods.map(mapRowToProduct));
       }
 
       // 2. Categories
-      const { data: cats, error: catErr } = await supabase.from('categories').select('*');
-      if (!catErr && cats && cats.length > 0) {
-        setCategories(prev => {
-          const existingMap = new Map(prev.map(c => [c.id, c]));
-          cats.forEach(c => {
-            if (!existingMap.has(c.id)) {
-              existingMap.set(c.id, {
-                id: c.id,
-                name: c.name,
-                nameEn: c.name,
-                description: '',
-                icon: 'Layers',
-                isFeatured: true
-              });
-            }
-          });
-          return Array.from(existingMap.values());
-        });
+      const { data: cats, error: catErr } = await supabase.from('categories').select('*').order('created_at', { ascending: true });
+      if (!catErr && Array.isArray(cats)) {
+        setCategories(cats.map(c => ({
+          id: c.id,
+          name: c.name,
+          nameEn: c.name,
+          description: '',
+          icon: 'Layers',
+          isFeatured: true
+        })));
       }
 
       // 3. News Articles
       const { data: arts, error: artErr } = await supabase.from('news_articles').select('*').order('created_at', { ascending: false });
-      if (!artErr && arts && arts.length > 0) {
+      if (!artErr && Array.isArray(arts)) {
         setNewsArticles(arts.map(mapRowToArticle));
       }
 
       // 4. Jobs
       const { data: jbs, error: jobErr } = await supabase.from('jobs').select('*').order('created_at', { ascending: false });
-      if (!jobErr && jbs && jbs.length > 0) {
+      if (!jobErr && Array.isArray(jbs)) {
         setJobOpenings(jbs.map(mapRowToJob));
       }
 
       // 5. Quotes
       const { data: qts, error: qtErr } = await supabase.from('quote_requests').select('*').order('created_at', { ascending: false });
-      if (!qtErr && qts && qts.length > 0) {
+      if (!qtErr && Array.isArray(qts)) {
         setQuotes(qts.map(mapRowToQuote));
       }
 
       // 6. Applications
       const { data: apps, error: appErr } = await supabase.from('applications').select('*').order('created_at', { ascending: false });
-      if (!appErr && apps && apps.length > 0) {
+      if (!appErr && Array.isArray(apps)) {
         setApplications(apps.map(mapRowToApplication));
       }
 
@@ -472,6 +465,24 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Run initial sync on mount
   useEffect(() => {
     syncFromSupabase();
+  }, [syncFromSupabase]);
+
+  // Subscribe to real-time changes across all Supabase tables
+  useEffect(() => {
+    const channel = supabase
+      .channel('supabase-live-sync')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public' },
+        () => {
+          syncFromSupabase();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [syncFromSupabase]);
 
   // Sync to localStorage
@@ -763,6 +774,21 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
+  // Clear local storage and force fresh sync from Supabase
+  const clearCacheAndSync = async () => {
+    try {
+      localStorage.removeItem(STORAGE_KEYS.PRODUCTS);
+      localStorage.removeItem(STORAGE_KEYS.CATEGORIES);
+      localStorage.removeItem(STORAGE_KEYS.NEWS);
+      localStorage.removeItem(STORAGE_KEYS.JOBS);
+      localStorage.removeItem(STORAGE_KEYS.QUOTES);
+      localStorage.removeItem(STORAGE_KEYS.APPLICATIONS);
+    } catch (e) {
+      console.error('Failed to clear storage cache', e);
+    }
+    await syncFromSupabase();
+  };
+
   // Reset to factory defaults
   const resetToDefaults = () => {
     setProducts(PRODUCTS);
@@ -848,6 +874,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         addApplication,
         updateApplicationStatus,
         deleteApplication,
+        clearCacheAndSync,
         resetToDefaults,
         exportDataJSON,
         importDataJSON
