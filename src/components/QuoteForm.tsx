@@ -155,10 +155,10 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({ initialProduct = '', onSuc
                   </div>
                   <div>
                     <span className="text-[10px] text-zinc-500 block font-mono uppercase tracking-wider font-bold">
-                      {language === 'en' ? 'Hotline / WhatsApp B2B' : language === 'id' ? 'Hotline / WhatsApp B2B' : 'Hotline / Zalo B2B'}
+                      {language === 'en' ? 'Direct Factory Line' : language === 'id' ? 'Telepon Langsung Pabrik' : 'Điện Thoại Nhà Máy'}
                     </span>
-                    <a href="tel:0988688868" className="font-bold text-zinc-900 hover:text-emerald-700 text-sm font-mono">
-                      0988.688.868 ({language === 'en' ? 'Sales Division' : language === 'id' ? 'Divisi Penjualan' : 'Phòng Kinh Doanh'})
+                    <a href="tel:+842743782444" className="font-bold text-zinc-900 hover:text-emerald-700 text-sm font-mono">
+                      +84 274 378 2444 ({language === 'en' ? 'Sales Division' : language === 'id' ? 'Divisi Penjualan' : 'Phòng Kinh Doanh'})
                     </a>
                   </div>
                 </div>
@@ -171,8 +171,8 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({ initialProduct = '', onSuc
                     <span className="text-[10px] text-zinc-500 block font-mono uppercase tracking-wider font-bold">
                       {language === 'en' ? 'Tech Pack Receiving Email' : language === 'id' ? 'Email Penerimaan Tech Pack' : 'Email Tiếp Nhận Tech Pack'}
                     </span>
-                    <a href="mailto:contact@lienchau.com" className="font-bold text-zinc-900 hover:text-emerald-700 font-mono">
-                      contact@lienchau.com
+                    <a href="mailto:lienchau@lienchau.com" className="font-bold text-zinc-900 hover:text-emerald-700 font-mono">
+                      lienchau@lienchau.com
                     </a>
                   </div>
                 </div>

@@ -126,7 +126,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigateToContact, onNav
   const currentTab = workshops.find((w) => w.id === activeTab) || workshops[0];
 
   return (
-    <div className="bg-white text-zinc-900 pt-28 pb-20">
+    <div className="bg-white text-zinc-900 pt-20 pb-20">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
         
         {/* Header */}

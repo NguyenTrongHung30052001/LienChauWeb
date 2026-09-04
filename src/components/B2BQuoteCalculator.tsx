@@ -324,10 +324,10 @@ export const B2BQuoteCalculator: React.FC<B2BQuoteCalculatorProps> = ({ onDirect
                 <div className="text-[11px] text-zinc-500">Kỹ sư trưởng nhà máy sẵn sàng tiếp nhận bản vẽ &amp; mẫu vải</div>
               </div>
               <a
-                href="tel:0903822188"
+                href="tel:+842743782444"
                 className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white font-mono text-xs font-bold rounded-sm shrink-0"
               >
-                0903.822.188
+                +84 274 378 2444
               </a>
             </div>
 

@@ -45,23 +45,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
-      {/* 2026 Live Plant Operations Status Bar */}
-      <div className="bg-zinc-950 text-white text-[11px] font-mono py-1 px-4 sm:px-8 border-b border-zinc-800 flex items-center justify-between">
-        <div className="flex items-center gap-2 overflow-hidden">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
-          <span className="truncate text-zinc-300">
-            {t.nav.factoryLive}
-          </span>
-        </div>
-        <div className="flex items-center gap-3 md:gap-4 text-zinc-400 shrink-0">
-          <span className="hidden md:inline">{t.nav.standard}</span>
-          <span className="hidden md:inline">•</span>
-          <a href="tel:0903822188" className="text-emerald-400 hover:text-emerald-300 font-bold">
-            {t.nav.hotline}: 0903.822.188
-          </a>
-        </div>
-      </div>
-
       {/* Main Navigation Bar */}
       <div
         className={`transition-all duration-300 ${
@@ -83,14 +66,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             referrerPolicy="no-referrer"
           />
           <div className="flex flex-col">
-            <div className="flex items-center gap-1.5">
-              <span className="font-bold text-base sm:text-lg tracking-tight uppercase text-zinc-900 group-hover:text-emerald-700 transition-colors">
-                LIÊN CHÂU
-              </span>
-              <span className="text-[9px] px-1.5 py-0.2 bg-emerald-50 text-emerald-800 font-mono font-bold border border-emerald-300 rounded-xs">
-                JSC
-              </span>
-            </div>
+            <span className="font-bold text-base sm:text-lg tracking-tight uppercase text-zinc-900 group-hover:text-emerald-700 transition-colors">
+              LIÊN CHÂU
+            </span>
             <span className="text-[9px] text-zinc-500 font-medium tracking-tight hidden sm:block">
               Sản Xuất Dệt May
             </span>
@@ -152,11 +130,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           <LanguageSwitcher variant="dropdown" />
 
           <a
-            href="tel:0988688868"
+            href="tel:+842743782444"
             className="hidden 2xl:flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-zinc-600 hover:text-emerald-700 transition-colors border border-zinc-200 hover:border-emerald-500 px-3 py-2 bg-zinc-50 rounded-sm"
+            title="Điện thoại: +842743782444"
           >
             <PhoneCall className="w-3.5 h-3.5 text-emerald-600" />
-            <span className="font-mono">0988.688.868</span>
+            <span className="font-mono">+84 274 378 2444</span>
           </a>
 
           <button
@@ -220,11 +199,12 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <div className="pt-2 flex flex-col gap-2.5">
             <a
-              href="tel:0988688868"
-              className="flex items-center justify-center gap-2 py-2.5 bg-zinc-50 text-zinc-800 text-xs font-bold uppercase tracking-wider border border-zinc-200 rounded-sm"
+              href="tel:+842743782444"
+              className="flex items-center justify-center gap-2 py-2.5 bg-zinc-50 text-zinc-800 text-xs font-bold uppercase tracking-wider border border-zinc-200 rounded-sm font-mono"
+              title="Điện thoại: +842743782444"
             >
               <PhoneCall className="w-4 h-4 text-emerald-600" />
-              <span>{t.nav.hotline}: 0988.688.868</span>
+              <span>Điện thoại: +84 274 378 2444</span>
             </a>
             <button
               onClick={() => handleLinkClick('contact')}

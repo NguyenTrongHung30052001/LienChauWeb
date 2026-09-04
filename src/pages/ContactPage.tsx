@@ -11,7 +11,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ initialProduct = '' })
   const { t, language } = useLanguage();
 
   return (
-    <div className="bg-white text-zinc-900 pt-28 pb-20">
+    <div className="bg-white text-zinc-900 pt-20 pb-20">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
         
         {/* Header */}
@@ -38,15 +38,20 @@ export const ContactPage: React.FC<ContactPageProps> = ({ initialProduct = '' })
               <PhoneCall className="w-5 h-5" />
             </div>
             <h3 className="text-sm font-bold uppercase tracking-tight text-zinc-900">
-              {language === 'en' ? 'Quotation & Technical Hotline' : language === 'id' ? 'Hotline Konsultasi & Penawaran' : 'Hotline Tư Vấn Báo Giá'}
+              {language === 'en' ? 'Phone & Fax Division' : language === 'id' ? 'Telepon & Fax Pabrik' : 'Điện Thoại & Fax Nhà Máy'}
             </h3>
             <p className="text-xs text-zinc-600">
-              {language === 'en' ? 'Weaving technical advice & bulk discount tier:' : language === 'id' ? 'Dukungan teknis rajut & diskon volume besar:' : 'Hỗ trợ kỹ thuật dệt & chiết khấu số lượng lớn:'}
+              {language === 'en' ? 'Weaving technical advice & order support:' : language === 'id' ? 'Dukungan teknis rajut & pesanan:' : 'Hỗ trợ kỹ thuật dệt & đơn hàng sản xuất:'}
             </p>
-            <a href="tel:0988688868" className="text-base font-bold text-emerald-700 hover:text-emerald-800 font-mono block">
-              0988.688.868
-            </a>
-            <p className="text-[10px] text-zinc-500 font-mono">{language === 'en' ? 'WhatsApp / Zalo on-call 24/7' : language === 'id' ? 'WhatsApp / Zalo siaga 24/7' : 'Zalo / Viber trực 24/7'}</p>
+            <div className="space-y-1">
+              <a href="tel:+842743782444" className="text-base font-bold text-emerald-700 hover:text-emerald-800 font-mono block">
+                ĐT: +84 274 378 2444
+              </a>
+              <p className="text-xs font-semibold text-zinc-700 font-mono">
+                Fax: +84 274 378 2555
+              </p>
+            </div>
+            <p className="text-[10px] text-zinc-500 font-mono">{language === 'en' ? 'Direct switchboard' : language === 'id' ? 'Sentral telepon pabrik' : 'Tổng đài điều hành nhà máy'}</p>
           </div>
 
           <div className="p-6 bg-zinc-50 border border-zinc-200 rounded-sm space-y-2">
@@ -59,8 +64,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({ initialProduct = '' })
             <p className="text-xs text-zinc-600">
               {language === 'en' ? 'Submit spec sheets, tech packs or CAD artwork:' : language === 'id' ? 'Kirim file spec sheet, tech pack atau desain CAD:' : 'Gửi file spec sheet, tech pack hoặc mẫu thiết kế:'}
             </p>
-            <a href="mailto:contact@lienchau.com" className="text-sm font-bold text-emerald-700 hover:text-emerald-800 font-mono block">
-              contact@lienchau.com
+            <a href="mailto:lienchau@lienchau.com" className="text-sm font-bold text-emerald-700 hover:text-emerald-800 font-mono block">
+              lienchau@lienchau.com
             </a>
             <p className="text-[10px] text-zinc-500 font-mono">{language === 'en' ? 'Formal quotation within 2 hrs' : language === 'id' ? 'Respon penawaran dalam 2 jam' : 'Phản hồi báo giá trong 2h'}</p>
           </div>

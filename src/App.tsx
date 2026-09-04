@@ -183,13 +183,13 @@ function AppContent() {
 
         {/* Hotline Direct Call Button */}
         <a
-          href="tel:0988688868"
+          href="tel:+842743782444"
           className="pointer-events-auto flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase tracking-wider text-xs shadow-xl shadow-emerald-600/30 hover:scale-105 active:scale-95 transition-all group font-mono rounded-full border border-emerald-500"
-          title="Hotline: 0988.688.868"
+          title="Điện thoại: +842743782444"
         >
           <PhoneCall className="w-4 h-4 text-white group-hover:rotate-12 transition-transform" />
-          <span className="hidden sm:inline">0988.688.868</span>
-          <span className="sm:hidden">HOTLINE</span>
+          <span className="hidden sm:inline">+84 274 378 2444</span>
+          <span className="sm:hidden">GỌI ĐIỆN</span>
         </a>
       </div>
     </div>

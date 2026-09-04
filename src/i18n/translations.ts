@@ -243,13 +243,13 @@ export const translations = {
     },
     // Footer
     footer: {
-      companyName: 'CÔNG TY TNHH SX TM LIÊN CHÂU',
+      companyName: 'CÔNG TY CỔ PHẦN SẢN XUẤT DỆT LIÊN CHÂU',
       companyDesc: 'Nhà máy sản xuất dây giày, dây dệt bản và phụ liệu dệt may xuất khẩu hàng đầu tại Bình Dương, Việt Nam. Đáp ứng tiêu chuẩn OEKO-TEX, GRS và REACH.',
       quickLinks: 'Liên Kết Nhanh',
       categories: 'Dòng Sản Phẩm',
       factoryInfo: 'Thông Tin Nhà Máy',
       taxId: 'Mã số thuế: 3702988123',
-      copyright: '© 2026 Liên Châu. Tất cả các quyền được bảo lưu. Phát triển phục vụ ngành dệt may xuất khẩu.',
+      copyright: 'Copyright © 2026 CÔNG TY CỔ PHẦN SẢN XUẤT DỆT LIÊN CHÂU. Powered by IT Department',
       itemShoelace: 'Dây Giày Sneaker & Boots',
       itemWebbing: 'Dây Đai Dệt Webbing',
       itemElastic: 'Dây Thun Bản & Thun Tròn',
@@ -520,13 +520,13 @@ common: {
     },
     // Footer
     footer: {
-      companyName: 'LIEN CHAU MANUFACTURING & TRADING CO., LTD',
+      companyName: 'LIEN CHAU TEXTILE MANUFACTURING JOINT STOCK COMPANY',
       companyDesc: 'Leading OEM/ODM manufacturer of export shoelaces, webbing tapes, and narrow textile accessories based in Binh Duong, Vietnam. Certified OEKO-TEX, GRS, and REACH compliant.',
       quickLinks: 'Quick Navigation',
       categories: 'Product Lines',
       factoryInfo: 'Plant Information',
       taxId: 'Tax Code: 3702988123',
-      copyright: '© 2026 Lien Chau. All rights reserved. Crafted for the global export textile sector.',
+      copyright: 'Copyright © 2026 CÔNG TY CỔ PHẦN SẢN XUẤT DỆT LIÊN CHÂU. Powered by IT Department',
       itemShoelace: 'Sneaker & Boot Laces',
       itemWebbing: 'High-Tenacity Webbing',
       itemElastic: 'Knitted & Woven Elastics',
@@ -797,13 +797,13 @@ common: {
     },
     // Footer
     footer: {
-      companyName: 'PT LIEN CHAU MANUFACTURING & TRADING',
+      companyName: 'PT LIEN CHAU TEXTILE MANUFACTURING',
       companyDesc: 'Pabrik manufaktur tali sepatu, pita webbing, dan aksesori tekstil ekspor terkemuka di Binh Duong, Vietnam. Memenuhi standar OEKO-TEX, GRS, dan REACH.',
       quickLinks: 'Tautan Cepat',
       categories: 'Kategori Produk',
       factoryInfo: 'Informasi Pabrik',
       taxId: 'Nomor Pokok Pajak: 3702988123',
-      copyright: '© 2026 Lien Chau. Hak cipta dilindungi undang-undang. Dirancang untuk sektor ekspor tekstil global.',
+      copyright: 'Copyright © 2026 CÔNG TY CỔ PHẦN SẢN XUẤT DỆT LIÊN CHÂU. Powered by IT Department',
       itemShoelace: 'Tali Sneaker & Boots',
       itemWebbing: 'Pita Anyam Webbing',
       itemElastic: 'Karet Elastis Rajut',

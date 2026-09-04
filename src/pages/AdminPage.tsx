@@ -675,8 +675,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
                   {/* Company System Info */}
                   <div className="pt-3 border-t border-zinc-200 text-[11px] text-zinc-500 space-y-1">
                     <p className="font-bold text-zinc-700">Công ty Cổ phần Sản xuất Dệt Liên Châu</p>
-                    <p>Địa chỉ: KCN Sóng Thần 3, P. Phú Tân, TP. Thủ Dầu Một, Bình Dương</p>
-                    <p>Hotline: 0988.688.868 • MST: 3702988123</p>
+                    <p>Địa chỉ: Lô CN7, Đường N5, KCN Sóng Thần 3, P. Phú Tân, TP. Thủ Dầu Một, Bình Dương</p>
+                    <p>Điện thoại: +84 274 378 2444 • Fax: +84 274 378 2555 • Email: lienchau@lienchau.com</p>
                   </div>
                 </div>
               </div>
