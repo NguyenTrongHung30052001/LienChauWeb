@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, PhoneCall, ArrowRight, Layers, Sparkles } from 'lucide-react';
+import { Menu, X, Layers, Sparkles } from 'lucide-react';
 import { PageId } from '../types';
 import { useLanguage } from '../i18n/LanguageContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -117,36 +117,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           })}
         </nav>
 
-        {/* CTA Actions */}
-        <div className="hidden sm:flex items-center gap-3">
-          {/* Language Switcher Dropdown */}
+        {/* Language Switcher */}
+        <div className="hidden sm:flex items-center">
           <LanguageSwitcher variant="dropdown" />
-
-          <a
-            href="tel:+842743782444"
-            className="hidden 2xl:flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-zinc-600 hover:text-emerald-700 transition-colors border border-zinc-200 hover:border-emerald-500 px-3 py-2 bg-zinc-50 rounded-sm"
-            title="Điện thoại: +842743782444"
-          >
-            <PhoneCall className="w-3.5 h-3.5 text-emerald-600" />
-            <span className="font-mono">+84 274 378 2444</span>
-          </a>
-
-          <button
-            onClick={() => handleLinkClick('contact')}
-            className="bg-emerald-600 text-white font-bold text-xs px-5 py-2.5 uppercase tracking-wider hover:bg-emerald-700 transition-all duration-200 shadow-md shadow-emerald-600/20 active:scale-95 rounded-sm cursor-pointer whitespace-nowrap"
-          >
-            {t.nav.requestQuoteBtn}
-          </button>
         </div>
 
         {/* Mobile Hamburger Toggle */}
         <div className="flex lg:hidden items-center gap-2">
-          <button
-            onClick={() => handleLinkClick('contact')}
-            className="sm:hidden px-3 py-1.5 bg-emerald-600 text-white font-bold text-[11px] uppercase tracking-wider rounded-sm cursor-pointer"
-          >
-            {t.nav.mobileQuoteBtn}
-          </button>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="p-2 bg-zinc-100 border border-zinc-200 text-zinc-700 hover:text-emerald-600 rounded-sm cursor-pointer"
@@ -188,24 +165,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </button>
               );
             })}
-          </div>
-
-          <div className="pt-2 flex flex-col gap-2.5">
-            <a
-              href="tel:+842743782444"
-              className="flex items-center justify-center gap-2 py-2.5 bg-zinc-50 text-zinc-800 text-xs font-bold uppercase tracking-wider border border-zinc-200 rounded-sm font-mono"
-              title="Điện thoại: +842743782444"
-            >
-              <PhoneCall className="w-4 h-4 text-emerald-600" />
-              <span>Điện thoại: +84 274 378 2444</span>
-            </a>
-            <button
-              onClick={() => handleLinkClick('contact')}
-              className="w-full flex items-center justify-center gap-2 py-3 bg-emerald-600 text-white font-bold text-xs uppercase tracking-wider hover:bg-emerald-700 transition-colors rounded-sm cursor-pointer shadow-sm"
-            >
-              <span>{t.nav.mobileQuoteFull}</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
           </div>
         </div>
       )}
