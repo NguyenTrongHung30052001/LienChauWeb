@@ -1,0 +1,138 @@
+@import "tailwindcss";
+
+:root,
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "SF Pro", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "SF Pro", Arial, sans-serif;
+}
+
+.font-mono,
+code,
+pre {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Arial, monospace;
+}
+
+/* Cap maximum font-weight to 700 to prevent broken characters */
+.font-black,
+.font-extrabold {
+  font-weight: 700 !important;
+}
+
+b, strong, h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-back-forth {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-48%);
+  }
+}
+
+@keyframes marquee-reverse-back-forth {
+  0% {
+    transform: translateX(-48%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.animate-marquee-back-forth {
+  animation: marquee-back-forth 26s ease-in-out infinite alternate;
+}
+
+.animate-marquee-reverse-back-forth {
+  animation: marquee-reverse-back-forth 30s ease-in-out infinite alternate;
+}
+
+@keyframes orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.emerald-glow {
+  box-shadow: 0 4px 25px rgba(16, 185, 129, 0.15);
+}
+
+.emerald-glow-strong {
+  box-shadow: 0 8px 30px rgba(5, 150, 105, 0.25);
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(228, 228, 231, 0.8);
+}
+
+.glass-emerald {
+  background: rgba(236, 253, 245, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* Hide scrollbar for tabs */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Micro-weave textile grid background pattern */
+.bg-textile-grid {
+  background-color: #faf9f6;
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.bg-weave-cross {
+  background-image: radial-gradient(rgba(5, 150, 105, 0.08) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* Subtle warp and weft thread lines */
+.bg-warp-lines {
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 19px,
+    rgba(228, 228, 231, 0.6) 20px
+  );
+}
+
+::-webkit-scrollbar-track {
+  background: #f4f4f5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d4d4d8;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #059669;
+}
+
+
