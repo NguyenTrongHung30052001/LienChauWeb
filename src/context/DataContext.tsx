@@ -1,6 +1,18 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { Product, ProductCategory, NewsArticle, JobOpening, CategoryItem, QuoteRequestItem, JobApplicationItem } from '../types';
+import {
+  Product,
+  ProductCategory,
+  NewsArticle,
+  JobOpening,
+  CategoryItem,
+  QuoteRequestItem,
+  JobApplicationItem,
+  PartnerItem,
+  QuoteSpecItem,
+  CompanyInfo
+} from '../types';
 import { supabase } from '../lib/supabase';
+import { DEFAULT_PARTNERS, DEFAULT_QUOTE_SPECS, DEFAULT_COMPANY_INFO } from '../data/mockData';
 
 interface DataContextType {
   products: Product[];
@@ -11,6 +23,9 @@ interface DataContextType {
   jobs: JobOpening[];
   quotes: QuoteRequestItem[];
   applications: JobApplicationItem[];
+  partners: PartnerItem[];
+  quoteSpecs: QuoteSpecItem[];
+  companyInfo: CompanyInfo;
   supabaseStatus: 'connected' | 'connecting' | 'error';
   lastSyncTime: string;
   isLoading: boolean;
@@ -51,6 +66,22 @@ interface DataContextType {
   updateApplicationStatus: (id: string, status: JobApplicationItem['status']) => void;
   deleteApplication: (id: string) => void;
 
+  // Partners CRUD
+  addPartner: (partner: Omit<PartnerItem, 'id'>) => PartnerItem;
+  updatePartner: (id: string, updated: Partial<PartnerItem>) => void;
+  deletePartner: (id: string) => void;
+  togglePartnerStatus: (id: string) => void;
+
+  // Quote Specs CRUD
+  addQuoteSpec: (spec: Omit<QuoteSpecItem, 'id'>) => QuoteSpecItem;
+  updateQuoteSpec: (id: string, updated: Partial<QuoteSpecItem>) => void;
+  deleteQuoteSpec: (id: string) => void;
+  toggleQuoteSpecStatus: (id: string) => void;
+
+  // Company Info
+  updateCompanyInfo: (info: Partial<CompanyInfo>) => void;
+  resetCompanyInfo: () => void;
+
   // Backup & Reset
   clearCacheAndSync: () => Promise<void>;
   resetToDefaults: () => void;
@@ -66,7 +97,10 @@ const STORAGE_KEYS = {
   NEWS: 'lienchau_news_v2',
   JOBS: 'lienchau_jobs_v2',
   QUOTES: 'lienchau_quotes_v2',
-  APPLICATIONS: 'lienchau_applications_v2'
+  APPLICATIONS: 'lienchau_applications_v2',
+  PARTNERS: 'lienchau_partners_v2',
+  QUOTE_SPECS: 'lienchau_quote_specs_v2',
+  COMPANY_INFO: 'lienchau_company_info_v2'
 };
 
 // Row mappers between App types and Supabase PostgreSQL tables
@@ -223,6 +257,48 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [jobOpenings, setJobOpenings] = useState<JobOpening[]>([]);
   const [quotes, setQuotes] = useState<QuoteRequestItem[]>([]);
   const [applications, setApplications] = useState<JobApplicationItem[]>([]);
+
+  // Partners State
+  const [partners, setPartners] = useState<PartnerItem[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.PARTNERS);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {
+      // ignore
+    }
+    return DEFAULT_PARTNERS;
+  });
+
+  // Quote Specs State
+  const [quoteSpecs, setQuoteSpecs] = useState<QuoteSpecItem[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.QUOTE_SPECS);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {
+      // ignore
+    }
+    return DEFAULT_QUOTE_SPECS;
+  });
+
+  // Company Info State
+  const [companyInfo, setCompanyInfo] = useState<CompanyInfo>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.COMPANY_INFO);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.companyName) return { ...DEFAULT_COMPANY_INFO, ...parsed };
+      }
+    } catch (e) {
+      // ignore
+    }
+    return DEFAULT_COMPANY_INFO;
+  });
 
   // Fetch directly from Supabase
   const syncFromSupabase = useCallback(async () => {
@@ -401,6 +477,30 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('Failed to persist applications', e);
     }
   }, [applications]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.PARTNERS, JSON.stringify(partners));
+    } catch (e) {
+      console.error('Failed to persist partners', e);
+    }
+  }, [partners]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.QUOTE_SPECS, JSON.stringify(quoteSpecs));
+    } catch (e) {
+      console.error('Failed to persist quote specs', e);
+    }
+  }, [quoteSpecs]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.COMPANY_INFO, JSON.stringify(companyInfo));
+    } catch (e) {
+      console.error('Failed to persist company info', e);
+    }
+  }, [companyInfo]);
 
   // Product Actions
   const addProduct = (productData: Omit<Product, 'id'>): Product => {
@@ -718,6 +818,63 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
+  // Partners Actions
+  const addPartner = (partnerData: Omit<PartnerItem, 'id'>): PartnerItem => {
+    const newPartner: PartnerItem = {
+      ...partnerData,
+      id: `partner-${Date.now()}`
+    };
+    setPartners(prev => [newPartner, ...(prev || [])]);
+    return newPartner;
+  };
+
+  const updatePartner = (id: string, updated: Partial<PartnerItem>) => {
+    setPartners(prev => prev.map(p => (p.id === id ? { ...p, ...updated } : p)));
+  };
+
+  const deletePartner = (id: string) => {
+    setPartners(prev => prev.filter(p => p.id !== id));
+  };
+
+  const togglePartnerStatus = (id: string) => {
+    setPartners(prev =>
+      prev.map(p => (p.id === id ? { ...p, status: p.status === 'hidden' ? 'active' : 'hidden' } : p))
+    );
+  };
+
+  // Quote Specs Actions
+  const addQuoteSpec = (specData: Omit<QuoteSpecItem, 'id'>): QuoteSpecItem => {
+    const newSpec: QuoteSpecItem = {
+      ...specData,
+      id: `spec-${Date.now()}`
+    };
+    setQuoteSpecs(prev => [...(prev || []), newSpec]);
+    return newSpec;
+  };
+
+  const updateQuoteSpec = (id: string, updated: Partial<QuoteSpecItem>) => {
+    setQuoteSpecs(prev => prev.map(s => (s.id === id ? { ...s, ...updated } : s)));
+  };
+
+  const deleteQuoteSpec = (id: string) => {
+    setQuoteSpecs(prev => prev.filter(s => s.id !== id));
+  };
+
+  const toggleQuoteSpecStatus = (id: string) => {
+    setQuoteSpecs(prev =>
+      prev.map(s => (s.id === id ? { ...s, status: s.status === 'hidden' ? 'active' : 'hidden' } : s))
+    );
+  };
+
+  // Company Info Actions
+  const updateCompanyInfo = (info: Partial<CompanyInfo>) => {
+    setCompanyInfo(prev => ({ ...prev, ...info }));
+  };
+
+  const resetCompanyInfo = () => {
+    setCompanyInfo(DEFAULT_COMPANY_INFO);
+  };
+
   // Clear local storage and force fresh sync from Supabase
   const clearCacheAndSync = async () => {
     setIsLoading(true);
@@ -734,8 +891,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await syncFromSupabase();
   };
 
-  // Reset: clears local cache and strictly reloads directly from Supabase
+  // Reset: clears local cache and strictly reloads directly from Supabase + resets custom tables
   const resetToDefaults = () => {
+    setPartners(DEFAULT_PARTNERS);
+    setQuoteSpecs(DEFAULT_QUOTE_SPECS);
+    setCompanyInfo(DEFAULT_COMPANY_INFO);
     clearCacheAndSync();
   };
 
@@ -744,8 +904,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const backup = {
       exportedAt: new Date().toISOString(),
       company: 'Công ty Cổ phần Sản xuất Dệt Liên Châu',
+      companyInfo,
       products,
       categories,
+      partners,
+      quoteSpecs,
       newsArticles,
       jobOpenings,
       quotes,
@@ -764,6 +927,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (data.jobOpenings && Array.isArray(data.jobOpenings)) setJobOpenings(data.jobOpenings);
       if (data.quotes && Array.isArray(data.quotes)) setQuotes(data.quotes);
       if (data.applications && Array.isArray(data.applications)) setApplications(data.applications);
+      if (data.partners && Array.isArray(data.partners)) setPartners(data.partners);
+      if (data.quoteSpecs && Array.isArray(data.quoteSpecs)) setQuoteSpecs(data.quoteSpecs);
+      if (data.companyInfo && typeof data.companyInfo === 'object') setCompanyInfo(data.companyInfo);
       return true;
     } catch (e) {
       console.error('Failed to import JSON', e);
@@ -782,6 +948,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         jobs: jobOpenings || [],
         quotes: quotes || [],
         applications: applications || [],
+        partners: partners || [],
+        quoteSpecs: quoteSpecs || [],
+        companyInfo,
         supabaseStatus,
         lastSyncTime,
         isLoading,
@@ -809,6 +978,16 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         addApplication,
         updateApplicationStatus,
         deleteApplication,
+        addPartner,
+        updatePartner,
+        deletePartner,
+        togglePartnerStatus,
+        addQuoteSpec,
+        updateQuoteSpec,
+        deleteQuoteSpec,
+        toggleQuoteSpecStatus,
+        updateCompanyInfo,
+        resetCompanyInfo,
         clearCacheAndSync,
         resetToDefaults,
         exportDataJSON,

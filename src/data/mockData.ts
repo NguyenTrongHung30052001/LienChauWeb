@@ -1,4 +1,4 @@
-import { Product, ProductionStep, CompanyStat } from '../types';
+import { Product, ProductionStep, CompanyStat, PartnerItem, QuoteSpecItem, CompanyInfo } from '../types';
 
 export const COMPANY_STATS: CompanyStat[] = [
   {
@@ -522,18 +522,303 @@ export const PRODUCTION_STEPS: ProductionStep[] = [
   }
 ];
 
-export const PARTNERS = [
-  { name: 'Nike Supplier Partner', category: 'Athletic Footwear', country: 'Global' },
-  { name: 'Adidas OEM Tier-2', category: 'Sportswear', country: 'Germany' },
-  { name: 'Puma Footwear', category: 'Lifestyle & Running', country: 'Global' },
-  { name: 'Converse Heritage', category: 'Canvas Classics', country: 'USA' },
-  { name: 'Vans Skateboarding', category: 'Action Sports', country: 'USA' },
-  { name: 'Biti\'s Vietnam', category: 'National Footwear', country: 'Vietnam' },
-  { name: 'Timberland Outdoor', category: 'Work & Boots', country: 'USA' },
-  { name: 'Dr. Martens', category: 'Leather Footwear', country: 'UK' },
-  { name: 'Ananas Sneaker', category: 'Vulcanized Shoes', country: 'Vietnam' },
-  { name: 'New Balance OEM', category: 'Performance Running', country: 'USA' }
+export const DEFAULT_PARTNERS: PartnerItem[] = [
+  {
+    id: 'partner-1',
+    name: 'Nike Supplier Partner',
+    category: 'Athletic Footwear',
+    trend: 'Gorpcore & High-Tech Trail',
+    country: 'Hoa Kỳ / Global',
+    logo: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=120&q=80',
+    status: 'active',
+    order: 1
+  },
+  {
+    id: 'partner-2',
+    name: 'Adidas OEM Tier-2',
+    category: 'Sportswear & Originals',
+    trend: 'Retro Runner & Terracewear',
+    country: 'Đức / Global',
+    logo: 'https://images.unsplash.com/photo-1518002171953-a080ee817e1f?auto=format&fit=crop&w=120&q=80',
+    status: 'active',
+    order: 2
+  },
+  {
+    id: 'partner-3',
+    name: 'Puma Footwear',
+    category: 'Lifestyle & Speedcat',
+    trend: 'Motorsport & Chunky Sole',
+    country: 'Đức / Global',
+    logo: 'https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&w=120&q=80',
+    status: 'active',
+    order: 3
+  },
+  {
+    id: 'partner-4',
+    name: 'Converse Heritage',
+    category: 'Canvas Classics',
+    trend: 'Vintage Grunge & Washed Tone',
+    country: 'Hoa Kỳ',
+    logo: 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=120&q=80',
+    status: 'active',
+    order: 4
+  },
+  {
+    id: 'partner-5',
+    name: 'Vans Skateboarding',
+    category: 'Action Sports & Skate',
+    trend: 'Old Skool Checkerboard & Suede',
+    country: 'Hoa Kỳ',
+    logo: 'https://images.unsplash.com/photo-1560769629-975ec94e6a86?auto=format&fit=crop&w=120&q=80',
+    status: 'active',
+    order: 5
+  },
+  {
+    id: 'partner-6',
+    name: "Biti's Vietnam",
+    category: 'Thương Hiệu Quốc Dân',
+    trend: 'Streetwear Hunter Gen-Z',
+    country: 'Việt Nam',
+    logo: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=120&q=80',
+    status: 'active',
+    order: 6
+  },
+  {
+    id: 'partner-7',
+    name: 'Timberland Outdoor',
+    category: 'Work & Waterproof Boots',
+    trend: 'Heavy-Duty Workwear & Eco-Nubuck',
+    country: 'Hoa Kỳ',
+    logo: 'https://images.unsplash.com/photo-1520639888713-7851133b1ed0?auto=format&fit=crop&w=120&q=80',
+    status: 'active',
+    order: 7
+  },
+  {
+    id: 'partner-8',
+    name: 'Dr. Martens',
+    category: 'Leather Footwear & Boots',
+    trend: 'Subculture Punk & Waxed Round Lace',
+    country: 'Anh Quốc',
+    logo: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&w=120&q=80',
+    status: 'active',
+    order: 8
+  },
+  {
+    id: 'partner-9',
+    name: 'Ananas Sneaker',
+    category: 'Vulcanized Shoes',
+    trend: 'Vietnamese Street Heritage',
+    country: 'Việt Nam',
+    logo: 'https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?auto=format&fit=crop&w=120&q=80',
+    status: 'active',
+    order: 9
+  },
+  {
+    id: 'partner-10',
+    name: 'New Balance OEM',
+    category: 'Performance Running & Dad Shoes',
+    trend: 'Normcore & 990s Vintage Mesh',
+    country: 'Hoa Kỳ / VN Tier-1',
+    logo: 'https://images.unsplash.com/photo-1551107696-a4b0c5a0d9a2?auto=format&fit=crop&w=120&q=80',
+    status: 'active',
+    order: 10
+  },
+  {
+    id: 'partner-11',
+    name: 'Taekwang Vina Footwear',
+    category: 'Nike Tier-1 OEM Mega Factory',
+    trend: 'Flyknit High-Tenacity Cord',
+    country: 'Hàn Quốc / Đồng Nai',
+    logo: 'https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?auto=format&fit=crop&w=120&q=80',
+    status: 'active',
+    order: 11
+  },
+  {
+    id: 'partner-12',
+    name: 'Chang Shin Vietnam',
+    category: 'Nike Core OEM Manufacturer',
+    trend: 'Sustainable Zero-Waste Lacing',
+    country: 'Hàn Quốc / Vĩnh Cửu',
+    logo: 'https://images.unsplash.com/photo-1579338559194-a162d19bf842?auto=format&fit=crop&w=120&q=80',
+    status: 'active',
+    order: 12
+  }
 ];
+
+export const PARTNERS = DEFAULT_PARTNERS.map(p => ({
+  name: p.name,
+  category: p.category,
+  country: p.country,
+  logo: p.logo,
+  trend: p.trend
+}));
+
+export const DEFAULT_QUOTE_SPECS: QuoteSpecItem[] = [
+  {
+    id: 'spec-1',
+    name: 'SẢN PHẨM MỚI: Dây Dệt Jacquard ECO-RPET 2026',
+    group: 'Sản Phẩm Mới & FW25',
+    defaultMoq: '1,000 cặp',
+    sampleLeadTime: '48 giờ',
+    description: 'Sợi RPET tái sinh chuẩn GRS, dệt nổi jacquard vi tính, thân thiện môi trường',
+    status: 'active',
+    order: 1
+  },
+  {
+    id: 'spec-2',
+    name: 'SẢN PHẨM MỚI: Dây Luồn Dạ Quang NightGlow',
+    group: 'Sản Phẩm Mới & FW25',
+    defaultMoq: '500 mét',
+    sampleLeadTime: '24 giờ',
+    description: 'Sợi phát quang trong đêm, chống nước DWR cho áo khoác và túi outdoor',
+    status: 'active',
+    order: 2
+  },
+  {
+    id: 'spec-3',
+    name: 'DÂY GIÀY: Dây Dẹt Thể Thao Sneaker Pro (Bản 8mm - 10mm)',
+    group: 'Dây Giày (Shoelace)',
+    defaultMoq: '1,000 cặp',
+    sampleLeadTime: '24 - 48 giờ',
+    description: 'Polyester dệt thoi 2 lớp, lực kéo đứt >160N, bền màu ma sát cấp 4-5',
+    status: 'active',
+    order: 3
+  },
+  {
+    id: 'spec-4',
+    name: 'DÂY GIÀY: Dây Tròn Bện Gia Cường Hiking & Boots (Phi 4.5mm - 6mm)',
+    group: 'Dây Giày (Shoelace)',
+    defaultMoq: '1,000 cặp',
+    sampleLeadTime: '48 giờ',
+    description: 'Bện 32-48 thoi có lõi chịu lực polyester gia cường, chống mài mòn địa hình',
+    status: 'active',
+    order: 4
+  },
+  {
+    id: 'spec-5',
+    name: 'DÂY GIÀY: Dây Da Bò Sáp Waxed Cao Cấp (Dress Shoes / Boots)',
+    group: 'Dây Giày (Shoelace)',
+    defaultMoq: '1,000 cặp',
+    sampleLeadTime: '48 giờ',
+    description: 'Cotton 100% nhúng sáp ong paraffin bóng mờ chống thấm nước',
+    status: 'active',
+    order: 5
+  },
+  {
+    id: 'spec-6',
+    name: 'DÂY GIÀY: Dây Dệt Phản Quang 3M Siêu Sáng',
+    group: 'Dây Giày (Shoelace)',
+    defaultMoq: '1,000 cặp',
+    sampleLeadTime: '48 giờ',
+    description: 'Kết hợp chỉ phản quang 3M Scotchlite độ phản xạ >450 cd/lux.m2',
+    status: 'active',
+    order: 6
+  },
+  {
+    id: 'spec-7',
+    name: 'WEBBING: Dây Đai Dệt High-Tenacity Poly Webbing (Bản 20mm - 50mm)',
+    group: 'Dây Đai (Webbing)',
+    defaultMoq: '1,000 mét',
+    sampleLeadTime: '2 - 3 ngày',
+    description: 'Bản đai chịu lực cho balo, quai sandal, dây đai an toàn tải trọng 200 - 1500kg',
+    status: 'active',
+    order: 7
+  },
+  {
+    id: 'spec-8',
+    name: 'WEBBING: Dây Đai Dệt Jacquard Logo & Hoa Văn Nổi',
+    group: 'Dây Đai (Webbing)',
+    defaultMoq: '1,000 mét',
+    sampleLeadTime: '3 ngày',
+    description: 'Dệt trực tiếp tên thương hiệu 2 mặt hoặc đa sắc theo bản vẽ thiết kế',
+    status: 'active',
+    order: 8
+  },
+  {
+    id: 'spec-9',
+    name: 'DÂY THUN: Thun Bản Lưng Quần Dệt Thoi / Dệt Kim (Bản 2.5cm - 5cm)',
+    group: 'Dây Thun (Elastic)',
+    defaultMoq: '2,000 mét',
+    sampleLeadTime: '2 - 3 ngày',
+    description: 'Lõi cao su Spandex tự nhiên đàn hồi >120%, không bai nhão sau giặt sấy',
+    status: 'active',
+    order: 9
+  },
+  {
+    id: 'spec-10',
+    name: 'DÂY THUN: Thun Tròn Co Giãn Bungee Cord (Phi 2.5mm - 5mm)',
+    group: 'Dây Thun (Elastic)',
+    defaultMoq: '1,000 mét',
+    sampleLeadTime: '24 giờ',
+    description: 'Thun tròn bọc poly cho khóa nút chặn stopper áo gió, balo',
+    status: 'active',
+    order: 10
+  },
+  {
+    id: 'spec-11',
+    name: 'DÂY LUỒN: Dây Luồn Áo Hoodie & Quần Jogger (Đầu Bấm Kim Loại)',
+    group: 'Dây Luồn (Drawstring)',
+    defaultMoq: '1,000 sợi',
+    sampleLeadTime: '24 - 48 giờ',
+    description: 'Dây luồn cotton bện hoặc dệt dẹt tròn, bấm đầu aglet theo yêu cầu',
+    status: 'active',
+    order: 11
+  },
+  {
+    id: 'spec-12',
+    name: 'TIPPING: Gia Công Bấm Đầu Kim Loại Khắc Laser & Mạ PVD',
+    group: 'Gia Công Tipping (Aglet)',
+    defaultMoq: '2,000 cặp',
+    sampleLeadTime: '3 ngày',
+    description: 'Đầu kim loại đồng/hợp kim mạ Gunmetal, Vàng Gold, Bạc Chrome, khắc laser logo',
+    status: 'active',
+    order: 12
+  },
+  {
+    id: 'spec-13',
+    name: 'TIPPING: Bấm Đầu Silicon Nhúng Dẻo & Màng Co Acetate Trong Suốt',
+    group: 'Gia Công Tipping (Aglet)',
+    defaultMoq: '2,000 cặp',
+    sampleLeadTime: '24 giờ',
+    description: 'Màng nhiệt acetate chuẩn OEKO-TEX hoặc nhúng đầu cao su màu tạo điểm nhấn',
+    status: 'active',
+    order: 13
+  },
+  {
+    id: 'spec-14',
+    name: 'Khác (Gia công theo mẫu vải / bản vẽ thông số kỹ thuật riêng)',
+    group: 'Tùy Chỉnh Riêng (Custom)',
+    defaultMoq: 'Thỏa thuận',
+    sampleLeadTime: '48 giờ',
+    description: 'Phân tích mẫu thực tế tại phòng Lab Liên Châu và dệt test miễn phí',
+    status: 'active',
+    order: 14
+  }
+];
+
+export const DEFAULT_COMPANY_INFO: CompanyInfo = {
+  companyName: 'CÔNG TY CỔ PHẦN SẢN XUẤT DỆT LIÊN CHÂU',
+  shortName: 'LIÊN CHÂU TEXTILE',
+  slogan: 'Go With You - Tiên phong phụ liệu dệt may & dây giày công nghiệp',
+  logo: 'https://theme.hstatic.net/200000421863/1000815266/14/logo.png?v=607',
+  bctLogo: 'https://theme.hstatic.net/200000421863/1000815266/14/logo_bct.png?v=607',
+  address: 'Đường D2, KCN Sóng Thần 3, P. Phú Tân, TP. Thủ Dầu Một, Tỉnh Bình Dương, Việt Nam',
+  taxId: '3701234567',
+  taxIssuer: 'Sở Kế Hoạch & Đầu Tư Tỉnh Bình Dương',
+  certifications: 'ISO 9001:2015 • OEKO-TEX Standard 100 Class 1 • GRS RECYCLED 4.0',
+  phone: '+84 274 378 2444',
+  hotline: '0903 123 456',
+  email: 'kinhdoanh@lienchau.com.vn',
+  workingHours: 'Thứ 2 - Thứ 7: 07:30 - 17:00 (Chủ Nhật nghỉ)',
+  facebookUrl: 'https://facebook.com',
+  tiktokUrl: 'https://tiktok.com',
+  youtubeUrl: 'https://youtube.com',
+  zaloUrl: 'https://zalo.me/842743782444',
+  googleMapsUrl: 'https://maps.google.com/?q=KCN+Song+Than+3+Binh+Duong',
+  factoryCoordinates: '10.9805° N, 106.6745° E',
+  establishedYear: 2010
+};
+
 
 export const WHY_CHOOSE_US = [
   {

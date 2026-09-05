@@ -141,3 +141,49 @@ export interface QuoteFormData {
   agletType: string;
   notes: string;
 }
+
+export interface PartnerItem {
+  id: string;
+  name: string;
+  category: string;
+  trend?: string;
+  country: string;
+  logo?: string;
+  status?: 'active' | 'hidden';
+  order?: number;
+}
+
+export interface QuoteSpecItem {
+  id: string;
+  name: string;
+  group: string;
+  defaultMoq?: string;
+  sampleLeadTime?: string;
+  description?: string;
+  status?: 'active' | 'hidden';
+  order?: number;
+}
+
+export interface CompanyInfo {
+  companyName: string;
+  shortName: string;
+  slogan: string;
+  logo: string;
+  bctLogo: string;
+  address: string;
+  taxId: string;
+  taxIssuer: string;
+  certifications: string;
+  phone: string;
+  hotline: string;
+  email: string;
+  workingHours: string;
+  facebookUrl: string;
+  tiktokUrl: string;
+  youtubeUrl: string;
+  zaloUrl: string;
+  googleMapsUrl: string;
+  factoryCoordinates: string;
+  establishedYear: number;
+}
+
