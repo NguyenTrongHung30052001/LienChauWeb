@@ -80,15 +80,15 @@ export const CareersPage: React.FC<CareersPageProps> = () => {
   };
 
   return (
-    <div className="bg-white text-zinc-900 pt-20 pb-20">
+    <div className="bg-white text-zinc-900 pt-8 sm:pt-12 pb-20">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
         
         {/* Page Title & Intro */}
-        <div className="text-left space-y-2 mb-14 pb-6 border-b border-zinc-200">
+        <div className="text-left space-y-2.5 mb-14 pb-6 border-b border-zinc-200">
           <span className="text-xs font-mono text-emerald-700 font-bold uppercase tracking-wider block">
             {language === 'en' ? 'Career Opportunities • Hiring 2026' : language === 'id' ? 'Peluang Karir • Rekrutmen 2026' : 'Cơ Hội Nghề Nghiệp • Tuyển Dụng 2026'}
           </span>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight text-zinc-900">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold uppercase tracking-tight text-zinc-900">
             {language === 'en' ? 'Join the Lien Chau Textile Team' : language === 'id' ? 'Bergabunglah dengan Tim Tekstil Lien Chau' : 'Gia Nhập Đội Ngũ Dệt May Liên Châu'}
           </h1>
           <p className="text-zinc-600 text-xs sm:text-sm max-w-2xl leading-relaxed">

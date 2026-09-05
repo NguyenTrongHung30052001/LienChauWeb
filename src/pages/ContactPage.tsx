@@ -11,15 +11,15 @@ export const ContactPage: React.FC<ContactPageProps> = ({ initialProduct = '' })
   const { t, language } = useLanguage();
 
   return (
-    <div className="bg-white text-zinc-900 pt-20 pb-20">
+    <div className="bg-white text-zinc-900 pt-8 sm:pt-12 pb-20">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
         
         {/* Header */}
-        <div className="text-left space-y-2 mb-12 pb-6 border-b border-zinc-200">
+        <div className="text-left space-y-2.5 mb-12 pb-6 border-b border-zinc-200">
           <span className="text-xs font-mono text-emerald-700 font-bold uppercase tracking-wider block">
             {language === 'en' ? 'Direct Factory Contact • Song Than 3 IP' : language === 'id' ? 'Kontak Langsung Pabrik • KWS Song Than 3' : 'Liên Hệ Trực Tiếp Nhà Máy • KCN Sóng Thần 3'}
           </span>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight text-zinc-900">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold uppercase tracking-tight text-zinc-900">
             {language === 'en' ? 'Request Quotation & Free Lab Dip Samples' : language === 'id' ? 'Permintaan Penawaran Harga & Sampel Uji Gratis' : 'Yêu Cầu Báo Giá & Gửi Mẫu Thử Miễn Phí'}
           </h1>
           <p className="text-zinc-600 text-xs sm:text-sm max-w-2xl leading-relaxed">

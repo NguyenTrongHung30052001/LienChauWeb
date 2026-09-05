@@ -58,15 +58,15 @@ export const ProcessPage: React.FC<ProcessPageProps> = ({
   ];
 
   return (
-    <div className="bg-white text-zinc-900 pt-20 pb-20">
+    <div className="bg-white text-zinc-900 pt-8 sm:pt-12 pb-20">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
         
         {/* Header */}
-        <div className="text-left space-y-2 mb-12 pb-6 border-b border-zinc-200">
+        <div className="text-left space-y-2.5 mb-12 pb-6 border-b border-zinc-200">
           <span className="text-xs font-mono text-emerald-700 font-bold uppercase tracking-wider block">
             {language === 'en' ? 'Manufacturing Capabilities & Closed-Loop Workflow' : language === 'id' ? 'Kemampuan Manufaktur & Alur Kerja Terpadu' : 'Quy Trình & Năng Lực Sản Xuất Khép Kín'}
           </span>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight text-zinc-900">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold uppercase tracking-tight text-zinc-900">
             {language === 'en' ? 'International Standard ISO 9001 Production Pipeline' : language === 'id' ? 'Lini Produksi Standar Internasional ISO 9001' : 'Dây Chuyền Chế Tác Tiêu Chuẩn Quốc Tế ISO 9001'}
           </h1>
           <p className="text-zinc-600 text-xs sm:text-sm max-w-3xl leading-relaxed">

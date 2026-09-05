@@ -44,96 +44,75 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+    <header className="sticky top-0 z-50 transition-all duration-300 bg-white border-b border-zinc-200/90 shadow-2xs">
       {/* Main Navigation Bar */}
       <div
         className={`transition-all duration-300 ${
           isScrolled
-            ? 'bg-white/95 backdrop-blur-md border-b border-zinc-200 py-2.5 shadow-sm'
-            : 'bg-white border-b border-zinc-200/90 py-3'
+            ? 'bg-white/95 backdrop-blur-md py-2 shadow-sm'
+            : 'bg-white py-2.5 sm:py-3'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 flex items-center justify-between">
-        {/* Brand Logo - Liên Châu */}
-        <button
-          onClick={() => handleLinkClick('home')}
-          className="flex items-center group cursor-pointer shrink-0 py-0.5"
-          title="Liên Châu"
-        >
-          <img
-            src="https://theme.hstatic.net/200000421863/1000815266/14/logo.png?v=607"
-            alt="Logo Liên Châu"
-            className="h-12 sm:h-14 w-auto max-w-[190px] object-contain transition-transform group-hover:scale-[1.02]"
-            referrerPolicy="no-referrer"
-          />
-        </button>
-
-        {/* Desktop Navigation */}
-        <nav className="hidden xl:flex items-center gap-6 text-xs font-bold uppercase tracking-wider text-zinc-600">
-          {navLinks.map((link) => {
-            const isActive = currentPage === link.id;
-            return (
-              <button
-                key={link.id}
-                onClick={() => handleLinkClick(link.id)}
-                className={`transition-colors py-1 relative flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
-                  isActive
-                    ? 'text-emerald-700 font-bold'
-                    : 'text-zinc-700 hover:text-emerald-600'
-                }`}
-              >
-                <span>{link.label}</span>
-                {link.badge && (
-                  <span className="px-1.5 py-0.5 bg-red-50 text-red-600 border border-red-200 text-[10px] font-mono font-bold rounded-sm uppercase">
-                    {link.badge}
-                  </span>
-                )}
-                {isActive && (
-                  <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-emerald-600 rounded-full" />
-                )}
-              </button>
-            );
-          })}
-        </nav>
-
-        {/* Desktop Medium Navigation (lg) */}
-        <nav className="hidden lg:flex xl:hidden items-center gap-4 text-xs font-bold uppercase tracking-wider text-zinc-600">
-          {navLinks.map((link) => {
-            const isActive = currentPage === link.id;
-            return (
-              <button
-                key={link.id}
-                onClick={() => handleLinkClick(link.id)}
-                className={`transition-colors py-1 relative cursor-pointer whitespace-nowrap ${
-                  isActive ? 'text-emerald-700 font-bold' : 'text-zinc-700 hover:text-emerald-600'
-                }`}
-              >
-                <span>{link.label}</span>
-                {isActive && (
-                  <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-emerald-600 rounded-full" />
-                )}
-              </button>
-            );
-          })}
-        </nav>
-
-        {/* Language Switcher */}
-        <div className="hidden sm:flex items-center">
-          <LanguageSwitcher variant="dropdown" />
-        </div>
-
-        {/* Mobile Hamburger Toggle */}
-        <div className="flex lg:hidden items-center gap-2">
+        <div className="w-full max-w-[94%] 2xl:max-w-[85%] mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
+          {/* Brand Logo - Liên Châu */}
           <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 bg-zinc-100 border border-zinc-200 text-zinc-700 hover:text-emerald-600 rounded-sm cursor-pointer"
-            aria-label="Toggle Menu"
+            onClick={() => handleLinkClick('home')}
+            className="flex items-center group cursor-pointer shrink-0 py-0.5"
+            title="Liên Châu"
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            <img
+              src="https://theme.hstatic.net/200000421863/1000815266/14/logo.png?v=607"
+              alt="Logo Liên Châu"
+              className="h-10 sm:h-12 w-auto max-w-[160px] sm:max-w-[180px] object-contain transition-transform group-hover:scale-[1.02]"
+              referrerPolicy="no-referrer"
+            />
           </button>
+
+          {/* Desktop Navigation - Responsive & Never Clipped */}
+          <nav className="hidden lg:flex items-center gap-1.5 xl:gap-4 2xl:gap-6 text-xs xl:text-[13px] font-semibold text-zinc-700">
+            {navLinks.map((link) => {
+              const isActive = currentPage === link.id;
+              return (
+                <button
+                  key={link.id}
+                  onClick={() => handleLinkClick(link.id)}
+                  className={`transition-all py-1.5 px-2 xl:px-2.5 rounded-sm relative flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+                    isActive
+                      ? 'text-emerald-700 font-bold bg-emerald-50/60'
+                      : 'hover:text-emerald-700 hover:bg-zinc-50'
+                  }`}
+                >
+                  <span>{link.label}</span>
+                  {link.badge && (
+                    <span className="px-1.5 py-0.2 bg-red-50 text-red-600 border border-red-200 text-[10px] font-mono font-bold rounded-sm uppercase">
+                      {link.badge}
+                    </span>
+                  )}
+                  {isActive && (
+                    <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-emerald-600 rounded-full" />
+                  )}
+                </button>
+              );
+            })}
+          </nav>
+
+          {/* Right Actions: Language Switcher */}
+          <div className="hidden sm:flex items-center shrink-0">
+            <LanguageSwitcher variant="dropdown" />
+          </div>
+
+          {/* Mobile Hamburger Toggle */}
+          <div className="flex lg:hidden items-center gap-2">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 bg-zinc-100 border border-zinc-200 text-zinc-700 hover:text-emerald-600 rounded-sm cursor-pointer"
+              aria-label="Toggle Menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (

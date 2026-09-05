@@ -1,13 +1,46 @@
 @import "tailwindcss";
 
 html {
-  font-size: 17.5px;
+  font-size: 16px;
   -webkit-text-size-adjust: 100%;
 }
 
 @media (min-width: 1024px) {
   html {
-    font-size: 18px;
+    font-size: 16.5px;
+  }
+}
+
+/* Global Container Width: Leaves 15-20% whitespace on both sides (content occupies ~82-84%) */
+.max-w-7xl {
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .max-w-7xl {
+    max-width: 86% !important;
+    width: 86% !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .max-w-7xl {
+    max-width: 84% !important;
+    width: 84% !important;
+  }
+}
+
+@media (min-width: 1536px) {
+  .max-w-7xl {
+    max-width: 82% !important;
+    width: 82% !important;
+  }
+}
+
+@media (min-width: 2560px) {
+  .max-w-7xl {
+    max-width: 80% !important;
+    width: 80% !important;
   }
 }
 

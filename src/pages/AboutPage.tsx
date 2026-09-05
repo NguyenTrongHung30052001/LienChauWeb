@@ -126,15 +126,15 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigateToContact, onNav
   const currentTab = workshops.find((w) => w.id === activeTab) || workshops[0];
 
   return (
-    <div className="bg-white text-zinc-900 pt-20 pb-20">
+    <div className="bg-white text-zinc-900 pt-8 sm:pt-12 pb-20">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
         
         {/* Header */}
-        <div className="text-left space-y-2 mb-14 pb-6 border-b border-zinc-200">
+        <div className="text-left space-y-2.5 mb-14 pb-6 border-b border-zinc-200">
           <span className="text-xs font-mono text-emerald-700 font-bold uppercase tracking-wider block">
             {language === 'en' ? 'Company Profile • Lien Chau Vietnam' : language === 'id' ? 'Profil Perusahaan • Lien Chau Vietnam' : 'Hồ Sơ Doanh Nghiệp • Liên Châu Vietnam'}
           </span>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight text-zinc-900">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold uppercase tracking-tight text-zinc-900">
             {language === 'en' ? '16 Years Accompanying Global Footwear Industry' : language === 'id' ? '16 Tahun Mendampingi Industri Alas Kaki Global' : '16 Năm Đồng Hành Cùng Ngành Da Giày Toàn Cầu'}
           </h1>
           <p className="text-zinc-600 text-xs sm:text-sm max-w-3xl leading-relaxed">

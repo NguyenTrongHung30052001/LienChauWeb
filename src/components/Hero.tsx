@@ -19,7 +19,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreProducts, onContactClick })
   };
 
   return (
-    <section id="hero" className="relative pt-20 pb-16 lg:pt-24 lg:pb-20 bg-[#faf9f6] bg-textile-grid border-b border-zinc-200">
+    <section id="hero" className="relative pt-8 sm:pt-10 pb-16 lg:pt-12 lg:pb-20 bg-[#faf9f6] bg-textile-grid border-b border-zinc-200">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
         
         {/* Top Industrial Meta Line */}

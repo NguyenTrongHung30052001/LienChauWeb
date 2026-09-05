@@ -37,15 +37,15 @@ export const NewsPage: React.FC<NewsPageProps> = ({ onNavigateToContact }) => {
   const featuredArticle = currentArticles && currentArticles.length > 0 ? currentArticles[0] : null;
 
   return (
-    <div className="bg-white text-zinc-900 pt-20 pb-20">
+    <div className="bg-white text-zinc-900 pt-8 sm:pt-12 pb-20">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
         
         {/* Page Header */}
-        <div className="text-left space-y-2 mb-12 pb-6 border-b border-zinc-200">
+        <div className="text-left space-y-2.5 mb-12 pb-6 border-b border-zinc-200">
           <span className="text-xs font-mono text-emerald-700 font-bold uppercase tracking-wider block">
             {language === 'en' ? 'Industry Insights & Corporate News' : language === 'id' ? 'Wawasan Industri & Berita Perusahaan' : 'Tin Tức & Hoạt Động Doanh Nghiệp'}
           </span>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold uppercase tracking-tight text-zinc-900">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold uppercase tracking-tight text-zinc-900">
             {language === 'en' ? 'Market Intelligence & Textile Trends' : language === 'id' ? 'Intelijen Pasar & Tren Tekstil' : 'Thông Tin Thị Trường & Dệt May'}
           </h1>
           <p className="text-zinc-600 text-xs sm:text-sm max-w-2xl leading-relaxed">
