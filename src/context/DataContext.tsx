@@ -369,6 +369,72 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setApplications(apps.map(mapRowToApplication));
       }
 
+      // 7. Partners
+      const { data: ptns, error: ptnErr } = await supabase
+        .from('partners')
+        .select('*')
+        .order('order_index', { ascending: true });
+      if (!ptnErr && Array.isArray(ptns) && ptns.length > 0) {
+        setPartners(ptns.map(p => ({
+          id: p.id,
+          name: p.name,
+          category: p.category,
+          country: p.country,
+          trend: p.trend || '',
+          logo: p.logo || '',
+          status: p.status || 'active',
+          order: p.order_index || 0
+        })));
+      }
+
+      // 8. Quote Specs
+      const { data: qSpecs, error: qSpecErr } = await supabase
+        .from('quote_specs')
+        .select('*')
+        .order('order_index', { ascending: true });
+      if (!qSpecErr && Array.isArray(qSpecs) && qSpecs.length > 0) {
+        setQuoteSpecs(qSpecs.map(s => ({
+          id: s.id,
+          name: s.name,
+          group: s.category_group,
+          defaultMoq: s.default_moq || '',
+          sampleLeadTime: s.sample_lead_time || '',
+          description: s.description || '',
+          status: s.status || 'active'
+        })));
+      }
+
+      // 9. Company Info
+      const { data: cInfo, error: cInfoErr } = await supabase
+        .from('company_info')
+        .select('*')
+        .limit(1);
+      if (!cInfoErr && Array.isArray(cInfo) && cInfo.length > 0) {
+        const infoRow = cInfo[0];
+        setCompanyInfo({
+          companyName: infoRow.company_name,
+          shortName: infoRow.short_name,
+          slogan: infoRow.slogan || '',
+          logo: infoRow.logo || '',
+          bctLogo: infoRow.bct_logo || '',
+          address: infoRow.address,
+          taxId: infoRow.tax_id,
+          taxIssuer: infoRow.tax_issuer || '',
+          certifications: infoRow.certifications || '',
+          phone: infoRow.phone,
+          hotline: infoRow.hotline || '',
+          email: infoRow.email,
+          workingHours: infoRow.working_hours || '',
+          facebookUrl: infoRow.facebook_url || '',
+          tiktokUrl: infoRow.tiktok_url || '',
+          youtubeUrl: infoRow.youtube_url || '',
+          zaloUrl: infoRow.zalo_url || '',
+          googleMapsUrl: infoRow.google_maps_url || '',
+          factoryCoordinates: infoRow.factory_coordinates || '',
+          establishedYear: infoRow.established_year || 2008
+        });
+      }
+
       setSupabaseStatus('connected');
       setIsLoading(false);
       const now = new Date();
@@ -822,24 +888,59 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const addPartner = (partnerData: Omit<PartnerItem, 'id'>): PartnerItem => {
     const newPartner: PartnerItem = {
       ...partnerData,
-      id: `partner-${Date.now()}`
+      id: `partner-${Date.now()}` // Generate temporary ID, DB will auto-generate real UUID but we don't have returning
     };
     setPartners(prev => [newPartner, ...(prev || [])]);
+    supabase.from('partners').insert([{
+      name: newPartner.name,
+      category: newPartner.category,
+      country: newPartner.country,
+      trend: newPartner.trend,
+      logo: newPartner.logo,
+      status: newPartner.status || 'active'
+    }]).then(({ error }) => {
+      if (error) console.error('Supabase add partner error:', error);
+      else syncFromSupabase(); // Re-sync to get real DB UUID
+    });
     return newPartner;
   };
 
   const updatePartner = (id: string, updated: Partial<PartnerItem>) => {
     setPartners(prev => prev.map(p => (p.id === id ? { ...p, ...updated } : p)));
+    supabase.from('partners').update({
+      name: updated.name,
+      category: updated.category,
+      country: updated.country,
+      trend: updated.trend,
+      logo: updated.logo,
+      status: updated.status,
+      updated_at: new Date().toISOString()
+    }).eq('id', id).then(({ error }) => {
+      if (error) console.error('Supabase update partner error:', error);
+    });
   };
 
   const deletePartner = (id: string) => {
     setPartners(prev => prev.filter(p => p.id !== id));
+    supabase.from('partners').delete().eq('id', id).then(({ error }) => {
+      if (error) console.error('Supabase delete partner error:', error);
+    });
   };
 
   const togglePartnerStatus = (id: string) => {
-    setPartners(prev =>
-      prev.map(p => (p.id === id ? { ...p, status: p.status === 'hidden' ? 'active' : 'hidden' } : p))
-    );
+    setPartners(prev => {
+      const next = prev.map(p => {
+        if (p.id === id) {
+          const nextStatus = p.status === 'hidden' ? 'active' : 'hidden';
+          supabase.from('partners').update({ status: nextStatus }).eq('id', id).then(({ error }) => {
+            if (error) console.error('Supabase toggle partner error:', error);
+          });
+          return { ...p, status: nextStatus as 'active' | 'hidden' };
+        }
+        return p;
+      });
+      return next;
+    });
   };
 
   // Quote Specs Actions
@@ -849,26 +950,98 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       id: `spec-${Date.now()}`
     };
     setQuoteSpecs(prev => [...(prev || []), newSpec]);
+    supabase.from('quote_specs').insert([{
+      name: newSpec.name,
+      category_group: newSpec.group || 'Khác',
+      default_moq: newSpec.defaultMoq,
+      sample_lead_time: newSpec.sampleLeadTime,
+      description: newSpec.description,
+      status: newSpec.status || 'active'
+    }]).then(({ error }) => {
+      if (error) console.error('Supabase add quote spec error:', error);
+      else syncFromSupabase();
+    });
     return newSpec;
   };
 
   const updateQuoteSpec = (id: string, updated: Partial<QuoteSpecItem>) => {
     setQuoteSpecs(prev => prev.map(s => (s.id === id ? { ...s, ...updated } : s)));
+    supabase.from('quote_specs').update({
+      name: updated.name,
+      category_group: updated.group,
+      default_moq: updated.defaultMoq,
+      sample_lead_time: updated.sampleLeadTime,
+      description: updated.description,
+      status: updated.status,
+      updated_at: new Date().toISOString()
+    }).eq('id', id).then(({ error }) => {
+      if (error) console.error('Supabase update quote spec error:', error);
+    });
   };
 
   const deleteQuoteSpec = (id: string) => {
     setQuoteSpecs(prev => prev.filter(s => s.id !== id));
+    supabase.from('quote_specs').delete().eq('id', id).then(({ error }) => {
+      if (error) console.error('Supabase delete quote spec error:', error);
+    });
   };
 
   const toggleQuoteSpecStatus = (id: string) => {
-    setQuoteSpecs(prev =>
-      prev.map(s => (s.id === id ? { ...s, status: s.status === 'hidden' ? 'active' : 'hidden' } : s))
-    );
+    setQuoteSpecs(prev => {
+      const next = prev.map(s => {
+        if (s.id === id) {
+          const nextStatus = s.status === 'hidden' ? 'active' : 'hidden';
+          supabase.from('quote_specs').update({ status: nextStatus }).eq('id', id).then(({ error }) => {
+            if (error) console.error('Supabase toggle quote spec error:', error);
+          });
+          return { ...s, status: nextStatus as 'active' | 'hidden' };
+        }
+        return s;
+      });
+      return next;
+    });
   };
 
   // Company Info Actions
-  const updateCompanyInfo = (info: Partial<CompanyInfo>) => {
+  const updateCompanyInfo = async (info: Partial<CompanyInfo>) => {
     setCompanyInfo(prev => ({ ...prev, ...info }));
+    
+    // Get existing info to see if we need to insert or update
+    const { data } = await supabase.from('company_info').select('id').limit(1);
+    
+    const updatePayload = {
+      company_name: info.companyName,
+      short_name: info.shortName,
+      slogan: info.slogan,
+      logo: info.logo,
+      bct_logo: info.bctLogo,
+      address: info.address,
+      tax_id: info.taxId,
+      tax_issuer: info.taxIssuer,
+      certifications: info.certifications,
+      phone: info.phone,
+      hotline: info.hotline,
+      email: info.email,
+      working_hours: info.workingHours,
+      facebook_url: info.facebookUrl,
+      tiktok_url: info.tiktokUrl,
+      youtube_url: info.youtubeUrl,
+      zalo_url: info.zaloUrl,
+      google_maps_url: info.googleMapsUrl,
+      factory_coordinates: info.factoryCoordinates,
+      established_year: info.establishedYear,
+      updated_at: new Date().toISOString()
+    };
+
+    if (data && data.length > 0) {
+      supabase.from('company_info').update(updatePayload).eq('id', data[0].id).then(({ error }) => {
+        if (error) console.error('Supabase update company info error:', error);
+      });
+    } else {
+      supabase.from('company_info').insert([updatePayload]).then(({ error }) => {
+        if (error) console.error('Supabase insert company info error:', error);
+      });
+    }
   };
 
   const resetCompanyInfo = () => {

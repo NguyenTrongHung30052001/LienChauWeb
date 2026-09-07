@@ -41,11 +41,15 @@ import {
   Database
 } from 'lucide-react';
 
+import { AdminPartnersTab } from '../components/admin/AdminPartnersTab';
+import { AdminQuoteSpecsTab } from '../components/admin/AdminQuoteSpecsTab';
+import { AdminCompanyInfoTab } from '../components/admin/AdminCompanyInfoTab';
+
 interface AdminPageProps {
   onNavigateToPublicPage: (page: PageId) => void;
 }
 
-type AdminTab = 'dashboard' | 'products' | 'categories' | 'news' | 'careers' | 'quotes';
+type AdminTab = 'dashboard' | 'products' | 'categories' | 'news' | 'careers' | 'quotes' | 'partners' | 'quoteSpecs' | 'companyInfo';
 
 export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) => {
   const {
@@ -417,6 +421,42 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
                 {quotes.length}
               </span>
             )}
+          </button>
+
+          <button
+            onClick={() => setActiveTab('quoteSpecs')}
+            className={`px-4 py-2.5 text-xs font-bold uppercase tracking-wider rounded-sm transition-colors flex items-center gap-2 whitespace-nowrap cursor-pointer ${
+              activeTab === 'quoteSpecs'
+                ? 'bg-zinc-900 text-white'
+                : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
+            }`}
+          >
+            <Database className="w-4 h-4" />
+            <span>QC Báo Giá</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('partners')}
+            className={`px-4 py-2.5 text-xs font-bold uppercase tracking-wider rounded-sm transition-colors flex items-center gap-2 whitespace-nowrap cursor-pointer ${
+              activeTab === 'partners'
+                ? 'bg-zinc-900 text-white'
+                : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
+            }`}
+          >
+            <Building2 className="w-4 h-4" />
+            <span>Đối Tác & Xu Hướng</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('companyInfo')}
+            className={`px-4 py-2.5 text-xs font-bold uppercase tracking-wider rounded-sm transition-colors flex items-center gap-2 whitespace-nowrap cursor-pointer ${
+              activeTab === 'companyInfo'
+                ? 'bg-zinc-900 text-white'
+                : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
+            }`}
+          >
+            <Sliders className="w-4 h-4" />
+            <span>Thông Tin Công Ty</span>
           </button>
         </div>
 
@@ -1461,6 +1501,20 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateToPublicPage }) 
             </div>
           )}
 
+          {/* ========================================================= */}
+          {/* 7. PARTNERS TAB */}
+          {/* ========================================================= */}
+          {activeTab === 'partners' && <AdminPartnersTab />}
+
+          {/* ========================================================= */}
+          {/* 8. QUOTE SPECS TAB */}
+          {/* ========================================================= */}
+          {activeTab === 'quoteSpecs' && <AdminQuoteSpecsTab />}
+
+          {/* ========================================================= */}
+          {/* 9. COMPANY INFO TAB */}
+          {/* ========================================================= */}
+          {activeTab === 'companyInfo' && <AdminCompanyInfoTab />}
         </div>
       </div>
 

@@ -34,7 +34,7 @@ export const AdminPartnersTab: React.FC = () => {
   const [formData, setFormData] = useState<Omit<PartnerItem, 'id'>>({
     name: '',
     logo: '',
-    fashionTrend: '',
+    trend: '',
     category: '',
     country: 'Việt Nam',
     status: 'active'
@@ -42,18 +42,18 @@ export const AdminPartnersTab: React.FC = () => {
 
   // Extract unique fashion trends for quick filter tags
   const uniqueTrends = Array.from(
-    new Set(partners.map(p => p.fashionTrend).filter(Boolean))
+    new Set(partners.map(p => p.trend).filter(Boolean))
   );
 
   const filteredPartners = partners.filter(p => {
     const matchesSearch =
       p.name.toLowerCase().includes(search.toLowerCase()) ||
-      (p.fashionTrend && p.fashionTrend.toLowerCase().includes(search.toLowerCase())) ||
+      (p.trend && p.trend.toLowerCase().includes(search.toLowerCase())) ||
       (p.category && p.category.toLowerCase().includes(search.toLowerCase())) ||
       (p.country && p.country.toLowerCase().includes(search.toLowerCase()));
 
     const matchesStatus = statusFilter === 'all' || p.status === statusFilter;
-    const matchesTrend = trendFilter === 'all' || p.fashionTrend === trendFilter;
+    const matchesTrend = trendFilter === 'all' || p.trend === trendFilter;
 
     return matchesSearch && matchesStatus && matchesTrend;
   });
@@ -76,7 +76,7 @@ export const AdminPartnersTab: React.FC = () => {
     setFormData({
       name: partner.name,
       logo: partner.logo || '',
-      fashionTrend: partner.fashionTrend || '',
+      trend: partner.trend || '',
       category: partner.category || '',
       country: partner.country || 'Việt Nam',
       status: partner.status
@@ -297,10 +297,10 @@ export const AdminPartnersTab: React.FC = () => {
 
                     {/* Fashion Trend */}
                     <td className="py-3 px-4">
-                      {partner.fashionTrend ? (
+                      {partner.trend ? (
                         <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xs text-[11px] font-medium">
                           <Sparkles className="w-3 h-3 text-emerald-600 shrink-0" />
-                          <span>{partner.fashionTrend}</span>
+                          <span>{partner.trend}</span>
                         </span>
                       ) : (
                         <span className="text-zinc-400 text-[11px] italic">Chưa cập nhật xu hướng</span>
@@ -473,8 +473,8 @@ export const AdminPartnersTab: React.FC = () => {
                 </label>
                 <input
                   type="text"
-                  value={formData.fashionTrend}
-                  onChange={(e) => setFormData(prev => ({ ...prev, fashionTrend: e.target.value }))}
+                  value={formData.trend}
+                  onChange={(e) => setFormData(prev => ({ ...prev, trend: e.target.value }))}
                   placeholder="Ví dụ: Gorpcore & Outdoor Eco-Tech, Chunky Y2K Laces..."
                   className="w-full px-3 py-2 border border-zinc-300 rounded-sm text-xs focus:border-emerald-600 focus:outline-none mb-1.5"
                 />
@@ -487,7 +487,7 @@ export const AdminPartnersTab: React.FC = () => {
                       <button
                         type="button"
                         key={s}
-                        onClick={() => setFormData(prev => ({ ...prev, fashionTrend: s }))}
+                        onClick={() => setFormData(prev => ({ ...prev, trend: s }))}
                         className="text-[10px] px-1.5 py-0.5 bg-zinc-100 hover:bg-emerald-50 hover:text-emerald-800 border border-zinc-200 rounded-xs transition-colors cursor-pointer text-zinc-600 font-mono"
                       >
                         + {s}

@@ -11,14 +11,17 @@ interface QuoteFormProps {
 
 export const QuoteForm: React.FC<QuoteFormProps> = ({ initialProduct = '', onSuccess }) => {
   const { t, language } = useLanguage();
-  const { addQuote } = useData();
+  const { addQuote, quoteSpecs } = useData();
+
+  const activeSpecs = quoteSpecs.filter(s => s.status === 'active');
+  const defaultSpecName = activeSpecs.length > 0 ? activeSpecs[0].name : 'Sản phẩm khác';
 
   const [formData, setFormData] = useState<QuoteFormData>({
     fullName: '',
     companyName: '',
     email: '',
     phone: '',
-    productType: initialProduct || 'Dây Dẹt Thể Thao Sneaker Pro',
+    productType: initialProduct || defaultSpecName,
     quantity: '1000-5000',
     lengthOption: '120cm',
     agletType: 'Kim loại khắc Laser',
@@ -38,25 +41,13 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({ initialProduct = '', onSuc
     }
   }, [initialProduct]);
 
-  const productOptions = [
-    'SẢN PHẨM MỚI: Dây Dệt Jacquard ECO-RPET 2026',
-    'SẢN PHẨM MỚI: Dây Luồn Dạ Quang NightGlow',
-    'DÂY GIÀY: Dây Dẹt Thể Thao Sneaker Pro',
-    'DÂY GIÀY: Dây Tròn Bện Gia Cường Hiking & Boots',
-    'DÂY GIÀY: Dây Da Bò Sáp Waxed Cao Cấp',
-    'DÂY GIÀY: Dây Dệt Phản Quang 3M Siêu Sáng',
-    'WEBBING: Dây Đai Dệt High-Tenacity Poly Webbing',
-    'WEBBING: Dây Đai Dệt Jacquard Logo & Hoa Văn',
-    'DÂY THUN: Thun Bản Lưng Quần Dệt Thoi / Dệt Kim',
-    'DÂY THUN: Thun Tròn Co Giãn Bungee Cord',
-    'DÂY LUỒN: Dây Luồn Áo Hoodie & Quần Thể Thao Jogger',
-    'DÂY LUỒN: Dây Luồn Kỹ Thuật Trượt Nước DWR Outdoor',
-    'TIPPING: Gia Công Bấm Đầu Kim Loại Khắc Laser & Mạ PVD',
-    'TIPPING: Bấm Đầu Silicon Nhúng Dẻo & Màng Co Acetate',
-    'FW25: Dây Giày Vintage Tone Đất FW25',
-    'FW25: Dây Luồn & Đai Webbing Dual-Tone FW25',
-    language === 'en' ? 'Custom / According to Buyer Spec Sheet' : language === 'id' ? 'Kustom / Sesuai Lembar Spesifikasi Pembeli' : 'Khác (Sản xuất theo mẫu hoặc bản vẽ riêng)'
-  ];
+  // Group specs for select dropdown
+  const groupedSpecs = activeSpecs.reduce((acc: Record<string, typeof quoteSpecs>, spec) => {
+    const group = spec.group || 'Khác';
+    if (!acc[group]) acc[group] = [];
+    acc[group].push(spec);
+    return acc;
+  }, {});
 
   const quantityOptions = [
     { 
@@ -300,8 +291,14 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({ initialProduct = '', onSuc
                     onChange={(e) => setFormData({ ...formData, productType: e.target.value })}
                     className="w-full px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 focus:border-zinc-900 focus:bg-white text-xs text-zinc-900 rounded-sm outline-none transition-colors"
                   >
-                    {productOptions.map((opt, i) => (
-                      <option key={i} value={opt}>{opt}</option>
+                    {Object.entries(groupedSpecs).map(([group, specs]) => (
+                      <optgroup key={group} label={group}>
+                        {(specs as typeof quoteSpecs).map((spec) => (
+                          <option key={spec.id} value={spec.name}>
+                            {spec.name}
+                          </option>
+                        ))}
+                      </optgroup>
                     ))}
                   </select>
                 </div>

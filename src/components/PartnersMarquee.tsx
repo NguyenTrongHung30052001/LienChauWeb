@@ -1,25 +1,18 @@
 import React, { useState } from 'react';
-import { PARTNERS, TESTIMONIALS } from '../data/mockData';
+import { TESTIMONIALS } from '../data/mockData';
 import { Star, Quote, Building2, Play, Pause, Repeat } from 'lucide-react';
+import { useLanguage } from '../i18n/LanguageContext';
+import { useData } from '../context/DataContext';
 
 export const PartnersMarquee: React.FC = () => {
+  const { t, language } = useLanguage();
+  const { partners } = useData();
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
 
-  // Mở rộng danh sách đối tác và chia thành 2 hàng chạy ngược chiều nhau
-  const row1Partners = [...PARTNERS, ...PARTNERS];
-  const row2Partners = [
-    { name: 'Taekwang Vina Footwear', category: 'OEM Manufacturing', country: 'Hàn Quốc / VN' },
-    { name: 'Chang Shin Vietnam', category: 'Nike Tier-1 OEM', country: 'Đồng Nai' },
-    { name: 'Pou Chen Group', category: 'Athletic Footwear', country: 'Đài Loan / VN' },
-    { name: 'Feng Tay Enterprise', category: 'Sporting Goods', country: 'Việt Nam' },
-    { name: "Biti's Hunter Factory", category: 'Thương Hiệu Quốc Dân', country: 'Việt Nam' },
-    { name: 'Ananas Vulcanized Shoes', category: 'Streetwear Footwear', country: 'Việt Nam' },
-    { name: 'Vina Giày Group', category: 'Giày Da Công Sở', country: 'Việt Nam' },
-    { name: 'Thượng Đình Shoes', category: 'Giày Vải Thể Thao', country: 'Việt Nam' },
-    { name: 'Dona Standard Footwear', category: 'Xuất Khẩu Bắc Mỹ', country: 'Đồng Nai' },
-    { name: 'Lacquer Craft Wood & Leather', category: 'Phụ Kiện Da', country: 'Bình Dương' },
-    ...PARTNERS
-  ];
+  const activePartners = partners.filter(p => p.status === 'active');
+  const midPoint = Math.ceil(activePartners.length / 2);
+  const row1Partners = [...activePartners.slice(0, midPoint), ...activePartners.slice(0, midPoint)];
+  const row2Partners = [...activePartners.slice(midPoint), ...activePartners.slice(midPoint)];
 
   return (
     <section id="partners" className="py-20 lg:py-24 bg-zinc-50 border-b border-zinc-200 overflow-hidden text-left">
@@ -79,8 +72,12 @@ export const PartnersMarquee: React.FC = () => {
               key={`row1-${partner.name}-${index}`}
               className="flex items-center gap-3 mx-2 px-4 py-2.5 bg-white border border-zinc-200 hover:border-zinc-400 transition-colors shrink-0 rounded-sm"
             >
-              <div className="w-7 h-7 bg-zinc-100 border border-zinc-200 rounded-xs flex items-center justify-center shrink-0">
-                <Building2 className="w-3.5 h-3.5 text-zinc-700" />
+              <div className="w-7 h-7 bg-zinc-100 border border-zinc-200 rounded-xs flex items-center justify-center shrink-0 overflow-hidden">
+                {partner.logo ? (
+                  <img src={partner.logo} alt={partner.name} className="w-full h-full object-contain p-0.5" />
+                ) : (
+                  <Building2 className="w-3.5 h-3.5 text-zinc-700" />
+                )}
               </div>
               <div className="text-left">
                 <span className="text-xs font-bold uppercase tracking-tight text-zinc-900 block font-mono">
@@ -104,8 +101,12 @@ export const PartnersMarquee: React.FC = () => {
               key={`row2-${partner.name}-${index}`}
               className="flex items-center gap-3 mx-2 px-4 py-2.5 bg-white border border-zinc-200 hover:border-zinc-400 transition-colors shrink-0 rounded-sm"
             >
-              <div className="w-7 h-7 bg-zinc-100 border border-zinc-200 rounded-xs flex items-center justify-center shrink-0">
-                <Building2 className="w-3.5 h-3.5 text-zinc-600" />
+              <div className="w-7 h-7 bg-zinc-100 border border-zinc-200 rounded-xs flex items-center justify-center shrink-0 overflow-hidden">
+                {partner.logo ? (
+                  <img src={partner.logo} alt={partner.name} className="w-full h-full object-contain p-0.5" />
+                ) : (
+                  <Building2 className="w-3.5 h-3.5 text-zinc-600" />
+                )}
               </div>
               <div className="text-left">
                 <span className="text-xs font-bold uppercase tracking-tight text-zinc-900 block font-mono">

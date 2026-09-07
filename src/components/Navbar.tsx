@@ -3,6 +3,7 @@ import { Menu, X, Layers, Sparkles } from 'lucide-react';
 import { PageId } from '../types';
 import { useLanguage } from '../i18n/LanguageContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
+import { useData } from '../context/DataContext';
 
 interface NavbarProps {
   currentPage: PageId;
@@ -16,6 +17,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenQuote
 }) => {
   const { t } = useLanguage();
+  const { companyInfo } = useData();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -58,14 +60,18 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={() => handleLinkClick('home')}
             className="flex items-center group cursor-pointer shrink-0 py-0.5"
-            title="Liên Châu"
+            title={companyInfo.companyName}
           >
-            <img
-              src="https://theme.hstatic.net/200000421863/1000815266/14/logo.png?v=607"
-              alt="Logo Liên Châu"
-              className="h-10 sm:h-12 w-auto max-w-[160px] sm:max-w-[180px] object-contain transition-transform group-hover:scale-[1.02]"
-              referrerPolicy="no-referrer"
-            />
+            {companyInfo.logo ? (
+              <img
+                src={companyInfo.logo}
+                alt={`Logo ${companyInfo.shortName}`}
+                className="h-10 sm:h-12 w-auto max-w-[160px] sm:max-w-[180px] object-contain transition-transform group-hover:scale-[1.02]"
+                referrerPolicy="no-referrer"
+              />
+            ) : (
+              <span className="font-bold text-lg sm:text-xl text-emerald-800">{companyInfo.shortName}</span>
+            )}
           </button>
 
           {/* Desktop Navigation - Responsive & Never Clipped */}

@@ -32,26 +32,26 @@ export const AdminQuoteSpecsTab: React.FC = () => {
   // Form State
   const [formData, setFormData] = useState<Omit<QuoteSpecItem, 'id'>>({
     name: '',
-    categoryGroup: 'Dây Giày (Shoelaces)',
-    moq: '1,000 cặp',
+    group: 'Dây Giày (Shoelaces)',
+    defaultMoq: '1,000 cặp',
     sampleLeadTime: '2-3 ngày làm việc',
-    notes: '',
+    description: '',
     status: 'active'
   });
 
   // Extract unique category groups for filtering
   const uniqueGroups = Array.from(
-    new Set(quoteSpecs.map(s => s.categoryGroup).filter(Boolean))
+    new Set(quoteSpecs.map(s => s.group).filter(Boolean))
   );
 
   const filteredSpecs = quoteSpecs.filter(s => {
     const matchesSearch =
       s.name.toLowerCase().includes(search.toLowerCase()) ||
-      (s.categoryGroup && s.categoryGroup.toLowerCase().includes(search.toLowerCase())) ||
-      (s.notes && s.notes.toLowerCase().includes(search.toLowerCase())) ||
-      (s.moq && s.moq.toLowerCase().includes(search.toLowerCase()));
+      (s.group && s.group.toLowerCase().includes(search.toLowerCase())) ||
+      (s.description && s.description.toLowerCase().includes(search.toLowerCase())) ||
+      (s.defaultMoq && s.defaultMoq.toLowerCase().includes(search.toLowerCase()));
 
-    const matchesGroup = groupFilter === 'all' || s.categoryGroup === groupFilter;
+    const matchesGroup = groupFilter === 'all' || s.group === groupFilter;
     const matchesStatus = statusFilter === 'all' || s.status === statusFilter;
 
     return matchesSearch && matchesGroup && matchesStatus;
@@ -74,10 +74,10 @@ export const AdminQuoteSpecsTab: React.FC = () => {
     setEditingSpec(spec);
     setFormData({
       name: spec.name,
-      categoryGroup: spec.categoryGroup,
-      moq: spec.moq,
+      group: spec.group,
+      defaultMoq: spec.defaultMoq,
       sampleLeadTime: spec.sampleLeadTime || '2-3 ngày làm việc',
-      notes: spec.notes || '',
+      description: spec.description || '',
       status: spec.status
     });
     setIsModalOpen(true);
@@ -261,13 +261,13 @@ export const AdminQuoteSpecsTab: React.FC = () => {
                     {/* Category Group */}
                     <td className="py-3 px-4">
                       <span className="inline-flex items-center px-2 py-0.5 bg-zinc-100 text-zinc-800 border border-zinc-200 rounded-xs text-[11px] font-mono">
-                        {spec.categoryGroup}
+                        {spec.group}
                       </span>
                     </td>
 
                     {/* MOQ */}
                     <td className="py-3 px-4 font-mono font-bold text-emerald-800 text-[11px]">
-                      {spec.moq}
+                      {spec.defaultMoq}
                     </td>
 
                     {/* Sample Lead Time */}
@@ -280,8 +280,8 @@ export const AdminQuoteSpecsTab: React.FC = () => {
 
                     {/* Notes */}
                     <td className="py-3 px-4 text-zinc-600 text-[11px]">
-                      {spec.notes ? (
-                        <span>{spec.notes}</span>
+                      {spec.description ? (
+                        <span>{spec.description}</span>
                       ) : (
                         <span className="text-zinc-400 italic">Không có</span>
                       )}
@@ -389,8 +389,8 @@ export const AdminQuoteSpecsTab: React.FC = () => {
                 </label>
                 <input
                   type="text"
-                  value={formData.categoryGroup}
-                  onChange={(e) => setFormData(prev => ({ ...prev, categoryGroup: e.target.value }))}
+                  value={formData.group}
+                  onChange={(e) => setFormData(prev => ({ ...prev, group: e.target.value }))}
                   placeholder="Dây Giày, Dây Đai Dệt, Dây Thun..."
                   className="w-full px-3 py-2 border border-zinc-300 rounded-sm text-xs focus:border-emerald-600 focus:outline-none mb-1.5"
                 />
@@ -399,7 +399,7 @@ export const AdminQuoteSpecsTab: React.FC = () => {
                     <button
                       type="button"
                       key={g}
-                      onClick={() => setFormData(prev => ({ ...prev, categoryGroup: g }))}
+                      onClick={() => setFormData(prev => ({ ...prev, group: g }))}
                       className="text-[10px] px-1.5 py-0.5 bg-zinc-100 hover:bg-emerald-50 hover:text-emerald-800 border border-zinc-200 rounded-xs transition-colors cursor-pointer text-zinc-600 font-mono"
                     >
                       + {g}
@@ -416,8 +416,8 @@ export const AdminQuoteSpecsTab: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    value={formData.moq}
-                    onChange={(e) => setFormData(prev => ({ ...prev, moq: e.target.value }))}
+                    value={formData.defaultMoq}
+                    onChange={(e) => setFormData(prev => ({ ...prev, defaultMoq: e.target.value }))}
                     placeholder="Ví dụ: 1,000 cặp, 500m, 50kg..."
                     className="w-full px-3 py-2 border border-zinc-300 rounded-sm text-xs focus:border-emerald-600 focus:outline-none"
                   />
@@ -444,8 +444,8 @@ export const AdminQuoteSpecsTab: React.FC = () => {
                 </label>
                 <textarea
                   rows={2}
-                  value={formData.notes}
-                  onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
+                  value={formData.description}
+                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                   placeholder="Ví dụ: Đóng gói cuộn hoặc cặp, khắc laser theo yêu cầu..."
                   className="w-full px-3 py-2 border border-zinc-300 rounded-sm text-xs focus:border-emerald-600 focus:outline-none resize-none"
                 />
